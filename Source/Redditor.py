@@ -21,38 +21,42 @@ class AccountManager:
         self.subreddit_folder_name = name + "_sr.txt"
         self.keyword_folder_name = name + "_kw.txt"
 
+        # xml folder
+        self.xml_folder = "redditors.xml"
+
+        self.xml_parser = FileManager.XmlParser(self.xml_folder, self.xml_folder)
         # List of ids of subreddits, subreddits, and keywords
         self.post_list = []
         self.subreddit_list = []
         self.keyword_list = []
 
-        self.load()
+        self.load_version_0_1()
         return
 
     # Functionality to add/remove subreddits
     def add_subreddit(self, subreddit_name):
         if subreddit_name not in self.subreddit_list:
             self.subreddit_list.append(subreddit_name)
-            self.save()
+            self.save_version_0_1()
         return
 
     def remove_subreddit(self, subreddit_name):
         if subreddit_name in self.subreddit_list:
             self.subreddit_list.remove(subreddit_name)
-            self.save()
+            self.save_version_0_1()
         return
 
     # Functionality to add/remove keywords
     def add_keyword(self, keyword_name):
         if keyword_name not in self.keyword_list:
             self.keyword_list.append(keyword_name)
-            self.save()
+            self.save_version_0_1()
         return
 
     def remove_keyword(self, keyword_name):
         if keyword_name in self.keyword_list:
             self.keyword_list.remove(keyword_name)
-            self.save()
+            self.save_version_0_1()
         return
 
     # Get posts from subreddits and send them if keyword is found
@@ -90,16 +94,18 @@ class AccountManager:
         return
 
     # Load list of IDs, subreddits, and keywords appropriately
-    def load(self):
+    def load_version_0_1(self):
         self.post_list = FileManager.load_id_list(self.id_folder_name)
         self.subreddit_list = FileManager.load_id_list(self.subreddit_folder_name)
         self.keyword_list = FileManager.load_id_list(self.keyword_folder_name)
 
     # Save list of IDs and subreddits appropriately
-    def save(self):
+    def save_version_0_1(self):
         FileManager.save_id_list(self.id_folder_name, self.post_list)
         FileManager.save_id_list(self.subreddit_folder_name, self.subreddit_list)
         FileManager.save_id_list(self.keyword_folder_name, self.keyword_list)
+
+        self.xml_parser.save()
         return
 
 
@@ -330,5 +336,4 @@ class MessageManager:
             body = body + command + ", "
 
         message.reply(body)
-        return
         return
