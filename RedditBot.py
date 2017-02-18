@@ -69,7 +69,7 @@ class Bot:
                     # Get posts and send if updated
                     for account in self.redditter_object_list:
                         account.process_posts(self.reddit, 100)
-                        account.save()
+                        account.save_version_0_1()
 
                     print "Posts processed"
 

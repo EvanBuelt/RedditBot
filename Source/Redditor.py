@@ -24,7 +24,7 @@ class AccountManager:
         # xml folder
         self.xml_folder = "redditors.xml"
 
-        self.xml_parser = FileManager.XmlParser(self.xml_folder, self.xml_folder)
+        self.xml_parser = FileManager.XmlManager(self.xml_folder, self.xml_folder)
         # List of ids of subreddits, subreddits, and keywords
         self.post_list = []
         self.subreddit_list = []
@@ -105,7 +105,7 @@ class AccountManager:
         FileManager.save_id_list(self.subreddit_folder_name, self.subreddit_list)
         FileManager.save_id_list(self.keyword_folder_name, self.keyword_list)
 
-        self.xml_parser.save()
+        self.xml_parser._save()
         return
 
 
