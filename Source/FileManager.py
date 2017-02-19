@@ -16,9 +16,12 @@ class XmlManager:
         # Identifiers for tags and attributes to make it easy to update/ensure reading and writing is consistent
         self.version_string = "version"
         self.redditor_name_string = "name"
+        self.subreddits_string = "subreddits"
+        self.global_keywords_string = "globalKeywords"
+        self.times_string = "times"
 
         # Load the XML data
-        self._load(folder_name)
+        self.load(folder_name)
 
     # Get version of saved data.
     def get_xml_version(self):
@@ -54,16 +57,12 @@ class XmlManager:
     def get_redditor_keywords(self, redditor_name):
         keyword_list = []
         if self.root is not None:
-            try:
-                redditor = self.get_redditor_child(redditor_name)
-                keywords = self.get_tag(redditor, 'globalKeywords')
+            redditor = self.get_redditor_child(redditor_name)
+            keywords = self.get_tag(redditor, self.global_keywords_string)
 
-                for child in keywords:
-                    # TODO: create and use variables for tag and attribute names
-                    keyword_list.append(child.attrib['name'])
-
-            except:
-                keyword_list = []
+            for child in keywords:
+                # TODO: create and use variables for tag and attribute names
+                keyword_list.append(child.attrib['name'])
 
         return keyword_list
 
@@ -71,17 +70,13 @@ class XmlManager:
     def get_redditor_subreddits(self, redditor_name):
         subreddit_list = []
         if self.root is not None:
-            try:
-                # TODO: check if tag is in data. If not found, figure out what to do
-                redditor = self.get_redditor_child(redditor_name)
-                subreddits = self.get_tag(redditor, 'subreddits')
+            # TODO: check if tag is in data. If not found, figure out what to do
+            redditor = self.get_redditor_child(redditor_name)
+            subreddits = self.get_tag(redditor, self.subreddits_string)
 
-                for child in subreddits:
-                    # TODO: create and use variables for tag and attribute names
-                    subreddit_list.append(child.attrib['name'])
-
-            except:
-                subreddit_list = []
+            for child in subreddits:
+                # TODO: create and use variables for tag and attribute names
+                subreddit_list.append(child.attrib['name'])
 
         return subreddit_list
 
@@ -89,17 +84,13 @@ class XmlManager:
     def get_redditor_times(self, redditor_name):
         times_list = []
         if self.root is not None:
-            try:
-                # TODO: check if tag is in data. If not found, figure out what to do
-                redditor = self.get_redditor_child(redditor_name)
-                times = self.get_tag(redditor, 'times')
+            # TODO: check if tag is in data. If not found, figure out what to do
+            redditor = self.get_redditor_child(redditor_name)
+            times = self.get_tag(redditor, self.times_string)
 
-                for child in times:
-                    # TODO: create and use variables for tag and attribute names
-                    times_list.append(child.attrib['name'])
-
-            except:
-                times_list = []
+            for child in times:
+                # TODO: create and use variables for tag and attribute names
+                times_list.append(child.attrib['name'])
 
         return times_list
 
@@ -118,9 +109,9 @@ class XmlManager:
                 # TODO: create and use variables for tag and attribute names
                 # Create xml elements for redditor
                 redditor = ET.Element('redditor', {'name': redditor_name, 'version': version_str})
-                subreddits = ET.Element('subreddits')
-                keywords = ET.Element('globalKeywords')
-                times = ET.Element('times')
+                subreddits = ET.Element(self.subreddits_string)
+                keywords = ET.Element(self.global_keywords_string)
+                times = ET.Element(self.times_string)
 
                 # Setup xml for redditor
                 self.root.append(redditor)
@@ -134,11 +125,17 @@ class XmlManager:
     def add_subreddits(self, redditor_name, subreddits):
         redditor_object = self.get_redditor_child(redditor_name)
         # TODO: create and use variables for tag and attribute names
-        subreddit_object = self.get_tag(redditor_object, 'subreddits')
+        subreddit_object = self.get_tag(redditor_object, self.subreddits_string)
 
         # TODO: get list of subreddits already in the xml first to avoid adding duplicates
+        current_subreddits = self.get_redditor_subreddits(redditor_name)
+        new_subreddits = []
 
         for subreddit in subreddits:
+            if subreddit not in current_subreddits:
+                new_subreddits.append(subreddit)
+
+        for subreddit in new_subreddits:
             # TODO: create and use variables for tag and attribute names
             subreddit_element = ET.Element('subreddit', {'name': subreddit})
             subreddit_object.append(subreddit_element)
@@ -147,28 +144,40 @@ class XmlManager:
     # Adds list of global keywords to xml. Returns list of keywords added
     def add_keywords(self, redditor_name, keywords):
         redditor_object = self.get_redditor_child(redditor_name)
-        keyword_object = self.get_tag(redditor_object, 'keywords')
+        keyword_object = self.get_tag(redditor_object, self.global_keywords_string)
 
         # TODO: get list of keywords already in the xml first to avoid adding duplicates
+        current_keywords = self.get_redditor_keywords(redditor_name)
+        new_keywords = []
 
-        for subreddit in keywords:
+        for keyword in keywords:
+            if keyword not in current_keywords:
+                new_keywords.append(keyword)
+
+        for keyword in new_keywords:
             # TODO: create and use variables for tag and attribute names
-            subreddit_element = ET.Element('keyword', {'name': subreddit})
-            keyword_object.append(subreddit_element)
+            keyword_element = ET.Element('keyword', {'name': keyword})
+            keyword_object.append(keyword_element)
         return
 
     # Adds list of times to xml. Returns list of times added
     def add_times(self, redditor_name, times):
         redditor_object = self.get_redditor_child(redditor_name)
         # TODO: create and use variables for tag and attribute names
-        time_object = self.get_tag(redditor_object, 'times')
+        time_object = self.get_tag(redditor_object, self.times_string)
 
         # TODO: get list of times already in the xml first to avoid adding duplicates
+        current_times = self.get_redditor_times(redditor_name)
+        new_times = []
 
-        for subreddit in times:
+        for time in times:
+            if time not in current_times:
+                new_times.append(time)
+
+        for time in new_times:
             # TODO: create and use variables for tag and attribute names
-            subreddit_element = ET.Element('time', {'name': subreddit})
-            time_object.append(subreddit_element)
+            time_element = ET.Element('time', {'name': time})
+            time_object.append(time_element)
         return
 
     def get_redditor_child(self, redditor_name):
@@ -191,7 +200,7 @@ class XmlManager:
 
     # TODO: Create different load functions for different versions
     # Loading and saving of the xml.
-    def _load(self, folder_name):
+    def load(self, folder_name):
         # If file exists, load it.
         if os.path.isfile(folder_name):
             self.tree = ET.parse(folder_name)
@@ -202,7 +211,7 @@ class XmlManager:
         return
 
     # Save the xml data. Only one save is likely needed as the xml should be saved to latest version
-    def _save(self):
+    def save(self):
         # TODO: Maybe add a variable to save major/minor version as well
         self.tree.write(self.save_file)
 

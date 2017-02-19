@@ -105,7 +105,7 @@ class AccountManager:
         FileManager.save_id_list(self.subreddit_folder_name, self.subreddit_list)
         FileManager.save_id_list(self.keyword_folder_name, self.keyword_list)
 
-        self.xml_parser._save()
+        self.xml_parser.save()
         return
 
 
