@@ -101,7 +101,7 @@ class XmlManager:
     '''
 
     # Returns a list of global keywords for the redditor.  Returns empty list if no keywords were found
-    def get_redditor_keywords(self, redditor_name):
+    def get_global_keywords(self, redditor_name):
         keyword_list = []
         if self.root is not None:
             redditor = self.get_redditor_child(redditor_name)
@@ -113,11 +113,11 @@ class XmlManager:
         return keyword_list
 
     # Adds list of global keywords to xml. Returns list of keywords added
-    def add_keywords(self, redditor_name, keywords):
+    def add_global_keywords(self, redditor_name, keywords):
         redditor_object = self.get_redditor_child(redditor_name)
         keyword_object = self.get_tag(redditor_object, self.global_keywords_string)
 
-        current_keywords = self.get_redditor_keywords(redditor_name)
+        current_keywords = self.get_global_keywords(redditor_name)
         new_keywords = []
 
         for keyword in keywords:
@@ -130,7 +130,7 @@ class XmlManager:
             keyword_object.append(keyword_element)
         return
 
-    def remove_keywords(self, redditor_name, keywords):
+    def remove_global_keywords(self, redditor_name, keywords):
         redditor_object = self.get_redditor_child(redditor_name)
         keyword_object = self.get_tag(redditor_object, self.global_keywords_string)
 
@@ -144,6 +144,75 @@ class XmlManager:
         # Remove all found keywords from xml data
         for keyword_element in keyword_elements_removal:
             keyword_object.remove(keyword_element)
+        return
+
+    '''
+    Section for adding, removing, and getting subreddit keywords
+    '''
+
+    # Returns a list of global keywords for the redditor.  Returns empty list if no keywords were found
+    def get_subreddit_keywords(self, redditor_name, subreddit):
+        keyword_list = []
+        if self.root is not None:
+            redditor = self.get_redditor_child(redditor_name)
+            subreddits = self.get_tag(redditor, self.subreddits_string)
+
+            subreddit_object = []
+
+            for child in subreddits:
+                if child.attrib[self.name_string] == subreddit:
+                    subreddit_object = child
+
+            for child in subreddit_object:
+                keyword_list.append(child.attrib[self.name_string])
+
+        return keyword_list
+
+    # Adds list of global keywords to xml. Returns list of keywords added
+    def add_subreddit_keywords(self, redditor_name, subreddit, keywords):
+
+        redditor = self.get_redditor_child(redditor_name)
+        subreddits = self.get_tag(redditor, self.subreddits_string)
+
+        subreddit_object = []
+
+        for child in subreddits:
+                if child.attrib[self.name_string] == subreddit:
+                    subreddit_object = child
+
+        current_keywords = self.get_subreddit_keywords(redditor_name, subreddit)
+        new_keywords = []
+
+        for keyword in keywords:
+            if keyword not in current_keywords:
+                new_keywords.append(keyword)
+
+        for keyword in new_keywords:
+            # TODO: create and use variables for tag and attribute names
+            keyword_element = ET.Element('keyword', {self.name_string: keyword})
+            subreddit_object.append(keyword_element)
+        return
+
+    def remove_subreddit_keywords(self, redditor_name, subreddit, keywords):
+        redditor = self.get_redditor_child(redditor_name)
+        subreddits = self.get_tag(redditor, self.subreddits_string)
+
+        subreddit_object = []
+
+        for child in subreddits:
+                if child.attrib[self.name_string] == subreddit:
+                    subreddit_object = child
+
+        keyword_elements_removal = []
+
+        # Find all keywords in list provided in xml data object
+        for keyword_element in subreddit_object:
+            if keyword_element.attrib[self.name_string] in keywords:
+                keyword_elements_removal.append(keyword_element)
+
+        # Remove all found keywords from xml data
+        for keyword_element in keyword_elements_removal:
+            subreddit_object.remove(keyword_element)
         return
 
     '''
