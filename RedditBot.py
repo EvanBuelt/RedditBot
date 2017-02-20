@@ -1,10 +1,11 @@
-import os
+
 import time
 
 import praw
 
 import Source.Redditor
 import Source.FileManager
+
 
 class Bot:
     def __init__(self, name):

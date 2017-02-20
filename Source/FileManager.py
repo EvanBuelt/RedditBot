@@ -103,27 +103,32 @@ class XmlManager:
     # Returns a list of global keywords for the redditor.  Returns empty list if no keywords were found
     def get_global_keywords(self, redditor_name):
         keyword_list = []
-        if self.root is not None:
-            redditor = self.get_redditor_child(redditor_name)
-            keywords = self.get_tag(redditor, self.global_keywords_string)
+        # Get keyword object that contains a list of global keywords
+        redditor_object = self.get_redditor_child(redditor_name)
+        keywords_object = self.get_tag(redditor_object, self.global_keywords_string)
 
-            for child in keywords:
-                keyword_list.append(child.attrib[self.name_string])
+        # Iterate over all children in keyword object to get list of keywords
+        for child in keywords_object.getchildren():
+            keyword_list.append(child.attrib[self.name_string])
 
         return keyword_list
 
     # Adds list of global keywords to xml. Returns list of keywords added
     def add_global_keywords(self, redditor_name, keywords):
+        # Get keyword object that contains a list of global keywords
         redditor_object = self.get_redditor_child(redditor_name)
         keyword_object = self.get_tag(redditor_object, self.global_keywords_string)
 
+        # Get current list of global keywords to avoid adding duplicates
         current_keywords = self.get_global_keywords(redditor_name)
         new_keywords = []
 
+        # Get list of new keywords to add
         for keyword in keywords:
             if keyword not in current_keywords:
                 new_keywords.append(keyword)
 
+        # Add new keywords to xml structure
         for keyword in new_keywords:
             # TODO: create and use variables for tag and attribute names
             keyword_element = ET.Element('keyword', {self.name_string: keyword})
@@ -131,13 +136,14 @@ class XmlManager:
         return
 
     def remove_global_keywords(self, redditor_name, keywords):
+        # Get keyword object that contains a list of global keywords
         redditor_object = self.get_redditor_child(redditor_name)
         keyword_object = self.get_tag(redditor_object, self.global_keywords_string)
 
         keyword_elements_removal = []
 
         # Find all keywords in list provided in xml data object
-        for keyword_element in keyword_object:
+        for keyword_element in keyword_object.getchildren():
             if keyword_element.attrib[self.name_string] in keywords:
                 keyword_elements_removal.append(keyword_element)
 
@@ -153,66 +159,80 @@ class XmlManager:
     # Returns a list of global keywords for the redditor.  Returns empty list if no keywords were found
     def get_subreddit_keywords(self, redditor_name, subreddit):
         keyword_list = []
-        if self.root is not None:
-            redditor = self.get_redditor_child(redditor_name)
-            subreddits = self.get_tag(redditor, self.subreddits_string)
+        # Get subreddit object that contains a list of subreddits
+        redditor_object = self.get_redditor_child(redditor_name)
+        subreddits_object = self.get_tag(redditor_object, self.subreddits_string)
 
-            subreddit_object = []
+        # Setup keyword object.
+        subreddit_keyword_object = None
 
-            for child in subreddits:
-                if child.attrib[self.name_string] == subreddit:
-                    subreddit_object = child
+        # Find subreddit specified
+        for child in subreddits_object.getchildren():
+            if child.attrib[self.name_string] == subreddit:
+                subreddit_keyword_object = child
 
-            for child in subreddit_object:
+        # Get a list of keywords under subreddit
+        if subreddit_keyword_object is not None:
+            for child in subreddit_keyword_object:
                 keyword_list.append(child.attrib[self.name_string])
 
         return keyword_list
 
     # Adds list of global keywords to xml. Returns list of keywords added
     def add_subreddit_keywords(self, redditor_name, subreddit, keywords):
+        # Get subreddit object that contains a list of subreddits
+        redditor_object = self.get_redditor_child(redditor_name)
+        subreddits_object = self.get_tag(redditor_object, self.subreddits_string)
 
-        redditor = self.get_redditor_child(redditor_name)
-        subreddits = self.get_tag(redditor, self.subreddits_string)
+        # Setup keyword object.
+        subreddit_keyword_object = None
 
-        subreddit_object = []
+        # Find subreddit specified
+        for child in subreddits_object.getchildren():
+            if child.attrib[self.name_string] == subreddit:
+                subreddit_object = child
 
-        for child in subreddits:
-                if child.attrib[self.name_string] == subreddit:
-                    subreddit_object = child
+        if subreddit_keyword_object is not None:
+            # Get all keywords for particular subreddit
+            current_keywords = self.get_subreddit_keywords(redditor_name, subreddit)
+            new_keywords = []
 
-        current_keywords = self.get_subreddit_keywords(redditor_name, subreddit)
-        new_keywords = []
+            # Get list of new keywords to be added
+            for keyword in keywords:
+                if keyword not in current_keywords:
+                    new_keywords.append(keyword)
 
-        for keyword in keywords:
-            if keyword not in current_keywords:
-                new_keywords.append(keyword)
-
-        for keyword in new_keywords:
-            # TODO: create and use variables for tag and attribute names
-            keyword_element = ET.Element('keyword', {self.name_string: keyword})
-            subreddit_object.append(keyword_element)
+            # Add new keywords to xml data
+            for keyword in new_keywords:
+                # TODO: create and use variables for tag and attribute names
+                keyword_element = ET.Element('keyword', {self.name_string: keyword})
+                subreddit_keyword_object.append(keyword_element)
         return
 
     def remove_subreddit_keywords(self, redditor_name, subreddit, keywords):
-        redditor = self.get_redditor_child(redditor_name)
-        subreddits = self.get_tag(redditor, self.subreddits_string)
+        # Get subreddit object that contains a list of subreddits
+        redditor_object = self.get_redditor_child(redditor_name)
+        subreddits_object = self.get_tag(redditor_object, self.subreddits_string)
 
-        subreddit_object = []
+        # Setup keyword object.
+        subreddit_keyword_object = None
 
-        for child in subreddits:
-                if child.attrib[self.name_string] == subreddit:
-                    subreddit_object = child
+        # Find subreddit specified
+        for child in subreddits_object.getchildren():
+            if child.attrib[self.name_string] == subreddit:
+                subreddit_keyword_object = child
 
-        keyword_elements_removal = []
+        if subreddit_keyword_object is not None:
+            keyword_elements_removal = []
 
-        # Find all keywords in list provided in xml data object
-        for keyword_element in subreddit_object:
-            if keyword_element.attrib[self.name_string] in keywords:
-                keyword_elements_removal.append(keyword_element)
+            # Find all keywords in list provided in xml data object
+            for keyword_element in subreddit_keyword_object:
+                if keyword_element.attrib[self.name_string] in keywords:
+                    keyword_elements_removal.append(keyword_element)
 
-        # Remove all found keywords from xml data
-        for keyword_element in keyword_elements_removal:
-            subreddit_object.remove(keyword_element)
+            # Remove all found keywords from xml data
+            for keyword_element in keyword_elements_removal:
+                subreddit_keyword_object.remove(keyword_element)
         return
 
     '''
@@ -221,29 +241,35 @@ class XmlManager:
 
     # Gets list of subreddits for the redditor.  Returns empty list if none found
     def get_redditor_subreddits(self, redditor_name):
-        subreddit_list = []
-        if self.root is not None:
-            # TODO: check if tag is in data. If not found, figure out what to do
-            redditor = self.get_redditor_child(redditor_name)
-            subreddits = self.get_tag(redditor, self.subreddits_string)
+        # Get subreddit object that contains a list of subreddits
+        redditor_object = self.get_redditor_child(redditor_name)
+        subreddits_object = self.get_tag(redditor_object, self.subreddits_string)
 
-            for child in subreddits:
-                subreddit_list.append(child.attrib[self.name_string])
+        # Setup return list of subreddits
+        subreddit_list = []
+
+        # Get a list of subreddits
+        for child in subreddits_object.getchildren():
+            subreddit_list.append(child.attrib[self.name_string])
 
         return subreddit_list
 
     # Adds list of subreddits to xml. Returns list of subreddits added
     def add_subreddits(self, redditor_name, subreddits):
+        # Get subreddit object that contains a list of subreddits
         redditor_object = self.get_redditor_child(redditor_name)
         subreddit_object = self.get_tag(redditor_object, self.subreddits_string)
 
+        # Get list of current subreddits to avoid adding duplicates
         current_subreddits = self.get_redditor_subreddits(redditor_name)
         new_subreddits = []
 
+        # Get list of new subreddits to add
         for subreddit in subreddits:
             if subreddit not in current_subreddits:
                 new_subreddits.append(subreddit)
 
+        # Add new subreddits to xml data
         for subreddit in new_subreddits:
             # TODO: create and use variables for tag and attribute names
             subreddit_element = ET.Element('subreddit', {self.name_string: subreddit})
@@ -251,13 +277,14 @@ class XmlManager:
         return
 
     def remove_subreddits(self, redditor_name, subreddits):
+        # Get subreddit object that contains a list of subreddits
         redditor_object = self.get_redditor_child(redditor_name)
         subreddit_object = self.get_tag(redditor_object, self.subreddits_string)
 
         subreddit_elements_removal = []
 
         # Find all keywords in list provided in xml data object
-        for subreddit_element in subreddit_object:
+        for subreddit_element in subreddit_object.getchildren():
             if subreddit_element.attrib[self.name_string] in subreddits:
                 subreddit_elements_removal.append(subreddit_element)
 
@@ -272,29 +299,34 @@ class XmlManager:
 
     # Gets list of times for the redditor.  Returns empty list if none found
     def get_redditor_times(self, redditor_name):
-        times_list = []
-        if self.root is not None:
-            redditor = self.get_redditor_child(redditor_name)
-            times = self.get_tag(redditor, self.times_string)
+        # Get time object that contains a list of times
+        redditor = self.get_redditor_child(redditor_name)
+        times_object = self.get_tag(redditor, self.times_string)
 
-            for child in times:
-                # TODO: create and use variables for tag and attribute names
-                times_list.append(child.attrib[self.name_string])
+        times_list = []
+
+        # Get list of times
+        for child in times_object.getchildren():
+            times_list.append(child.attrib[self.name_string])
 
         return times_list
 
     # Adds list of times to xml. Returns list of times added
     def add_times(self, redditor_name, times):
+        # Get time object that contains a list of times
         redditor_object = self.get_redditor_child(redditor_name)
         time_object = self.get_tag(redditor_object, self.times_string)
 
+        # Get list of current times to avoid adding duplicates
         current_times = self.get_redditor_times(redditor_name)
         new_times = []
 
+        # Get list of new times
         for time in times:
             if time not in current_times:
                 new_times.append(time)
 
+        # Add list of times to xml data
         for time in new_times:
             # TODO: create and use variables for tag and attribute names
             time_element = ET.Element('time', {self.name_string: time})
@@ -302,17 +334,18 @@ class XmlManager:
         return
 
     def remove_times(self, redditor_name, times):
+        # Get time object that contains a list of times
         redditor_object = self.get_redditor_child(redditor_name)
         time_object = self.get_tag(redditor_object, self.times_string)
 
         subreddit_elements_removal = []
 
-        # Find all keywords in list provided in xml data object
-        for time_element in time_object:
+        # Find all times in list provided in xml data object
+        for time_element in time_object.getchildren():
             if time_element.attrib[self.name_string] in times:
                 subreddit_elements_removal.append(time_element)
 
-        # Remove all found keywords from xml data
+        # Remove all found times from xml data
         for time_element in subreddit_elements_removal:
             time_object.remove(time_element)
         return
@@ -365,19 +398,21 @@ class XmlManager:
     Internal support for functions
     '''
     def get_redditor_child(self, redditor_name):
-        redditor_object = []
-        for child in self.root.getchildren():
-            if child.attrib[self.name_string] == redditor_name:
-                redditor_object = child
+        redditor_object = None
+        if self.root is not None:
+            for child in self.root.getchildren():
+                if child.attrib[self.name_string] == redditor_name:
+                    redditor_object = child
 
         return redditor_object
 
     def get_tag(self, xml_object, tag_name):
-        tag_object = []
-        for child in xml_object.getchildren():
-            # TODO: check if tag exists (may not be needed here)
-            if child.tag == tag_name:
-                tag_object = child
+        tag_object = None
+        if xml_object is not None:
+            for child in xml_object.getchildren():
+                # TODO: check if tag exists (may not be needed here)
+                if child.tag == tag_name:
+                    tag_object = child
 
         return tag_object
 
