@@ -63,6 +63,7 @@ class Bot:
                     self.save()
 
                 if (current_time[hours_index] != previous_hours) and (current_time[hours_index] % 8 == 0):
+                    previous_hours = current_time[hours_index]
                     # Get posts and send if updated
                     for account in self.redditter_object_list:
                         account.process_posts(self.reddit, 100)

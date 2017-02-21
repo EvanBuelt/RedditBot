@@ -124,7 +124,7 @@ class AccountManager:
         print self.name
         print self.subreddit_list
         print self.keyword_list
-        
+
         if save_xml:
             self.save_version_0_1()
 
