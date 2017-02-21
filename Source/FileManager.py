@@ -91,6 +91,7 @@ class XmlManager:
         self.subreddit_keywords_string = "subredditKeywords"
         self.global_keywords_string = "globalKeywords"
         self.times_string = "times"
+        self.subscribed_string = "subscribed"
 
     # Get version of saved data.
     def get_xml_version(self):
@@ -107,7 +108,7 @@ class XmlManager:
         keywords_object = self.get_tag(redditor_object, self.global_keywords_string)
 
         # Iterate over all children in keyword object to get list of keywords
-        for child in keywords_object.getchildren():
+        for child in keywords_object:
             keyword_list.append(child.attrib[self.name_string])
 
         return keyword_list
@@ -141,7 +142,7 @@ class XmlManager:
         keyword_elements_removal = []
 
         # Find all keywords in list provided in xml data object
-        for keyword_element in keyword_object.getchildren():
+        for keyword_element in keyword_object:
             if keyword_element.attrib[self.name_string] in keywords:
                 keyword_elements_removal.append(keyword_element)
 
@@ -164,7 +165,7 @@ class XmlManager:
         subreddit_keyword_object = None
 
         # Find subreddit specified
-        for child in subreddits_object.getchildren():
+        for child in subreddits_object:
             if child.attrib[self.name_string] == subreddit:
                 subreddit_keyword_object = child
 
@@ -184,7 +185,7 @@ class XmlManager:
         subreddit_keyword_object = None
 
         # Find subreddit specified
-        for child in subreddits_object.getchildren():
+        for child in subreddits_object:
             if child.attrib[self.name_string] == subreddit:
                 subreddit_object = child
 
@@ -214,7 +215,7 @@ class XmlManager:
         subreddit_keyword_object = None
 
         # Find subreddit specified
-        for child in subreddits_object.getchildren():
+        for child in subreddits_object:
             if child.attrib[self.name_string] == subreddit:
                 subreddit_keyword_object = child
 
@@ -235,7 +236,7 @@ class XmlManager:
     Section for adding, removing, and getting subreddits
     '''
 
-    def get_redditor_subreddits(self, redditor_name):
+    def get_subreddits(self, redditor_name):
         # Get subreddit object that contains a list of subreddits
         redditor_object = self.get_redditor_child(redditor_name)
         subreddits_object = self.get_tag(redditor_object, self.subreddits_string)
@@ -244,7 +245,7 @@ class XmlManager:
         subreddit_list = []
 
         # Get a list of subreddits
-        for child in subreddits_object.getchildren():
+        for child in subreddits_object:
             subreddit_list.append(child.attrib[self.name_string])
 
         return subreddit_list
@@ -255,7 +256,7 @@ class XmlManager:
         subreddit_object = self.get_tag(redditor_object, self.subreddits_string)
 
         # Get list of current subreddits to avoid adding duplicates
-        current_subreddits = self.get_redditor_subreddits(redditor_name)
+        current_subreddits = self.get_subreddits(redditor_name)
         new_subreddits = []
 
         # Get list of new subreddits to add
@@ -278,7 +279,7 @@ class XmlManager:
         subreddit_elements_removal = []
 
         # Find all keywords in list provided in xml data object
-        for subreddit_element in subreddit_object.getchildren():
+        for subreddit_element in subreddit_object:
             if subreddit_element.attrib[self.name_string] in subreddits:
                 subreddit_elements_removal.append(subreddit_element)
 
@@ -291,7 +292,7 @@ class XmlManager:
     Section for adding, removing, and getting times
     '''
 
-    def get_redditor_times(self, redditor_name):
+    def get_times(self, redditor_name):
         # Get time object that contains a list of times
         redditor = self.get_redditor_child(redditor_name)
         times_object = self.get_tag(redditor, self.times_string)
@@ -299,7 +300,7 @@ class XmlManager:
         times_list = []
 
         # Get list of times
-        for child in times_object.getchildren():
+        for child in times_object:
             times_list.append(child.attrib[self.name_string])
 
         return times_list
@@ -310,7 +311,7 @@ class XmlManager:
         time_object = self.get_tag(redditor_object, self.times_string)
 
         # Get list of current times to avoid adding duplicates
-        current_times = self.get_redditor_times(redditor_name)
+        current_times = self.get_times(redditor_name)
         new_times = []
 
         # Get list of new times
@@ -333,7 +334,7 @@ class XmlManager:
         subreddit_elements_removal = []
 
         # Find all times in list provided in xml data object
-        for time_element in time_object.getchildren():
+        for time_element in time_object:
             if time_element.attrib[self.name_string] in times:
                 subreddit_elements_removal.append(time_element)
 
@@ -417,10 +418,28 @@ class XmlManager:
         # Update version
         redditor_object.update(version_string)
 
+    def get_subscribed(self, redditor_name):
+        redditor_object = self.get_redditor_child(redditor_name)
+
+        subscribed = False
+
+        if self.subscribed_string in redditor_object.keys():
+            subscribed_string = redditor_object.attrib(self.subscribed_string)
+            if subscribed_string == 'True':
+                subscribed = True
+
+        return subscribed
+
+    def set_subscribed(self, redditor_name, subscribed):
+        redditor_object = self.get_redditor_child(redditor_name)
+
+        redditor_object.update(self.subscribed_string, str(subscribed))
+        return
+
     def get_redditor_name_list(self):
         redditor_list = []
         if self.root is not None:
-            for child in self.root.getchildren():
+            for child in self.root:
                 redditor_list.append(child.attrib[self.name_string])
         return redditor_list
 
@@ -428,18 +447,18 @@ class XmlManager:
     Internal support for functions
     '''
     def get_redditor_child(self, redditor_name):
-        redditor_object = ET.Element('redditor', {self.name_string: "None"})
+        redditor_object = []
         if self.root is not None:
-            for child in self.root.getchildren():
+            for child in self.root:
                 if child.attrib[self.name_string] == redditor_name:
                     redditor_object = child
 
         return redditor_object
 
     def get_tag(self, xml_object, tag_name):
-        tag_object = ET.Element(tag_name)
+        tag_object = []
         if xml_object is not None:
-            for child in xml_object.getchildren():
+            for child in xml_object:
                 # TODO: check if tag exists (may not be needed here)
                 if child.tag == tag_name:
                     tag_object = child
@@ -461,8 +480,8 @@ class XmlManager:
 # Save a list of IDs. Used for message IDs (as they are constant) and redditors (form of IDs)
 def save_id_list(folder_name, id_list):
     with open(folder_name, "w") as f:
-            for id_string in id_list:
-                f.write(id_string + "\n")
+        for id_string in id_list:
+            f.write(id_string + "\n")
 
 
 # Load a list of IDs. Used for message IDs (as they are constant) and redditors (form of IDs)

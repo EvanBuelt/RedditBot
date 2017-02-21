@@ -1,8 +1,5 @@
-
 import time
-
 import praw
-
 import Source.Redditor
 import Source.FileManager
 
@@ -15,6 +12,11 @@ class Bot:
         # Get list of folders for redditors and messages
         self.redditor_folder = "redditors.txt"
         self.message_folder = "message_id.txt"
+
+        # xml folder
+        self.xml_folder = "redditors.xml"
+        self.xml_loader = Source.FileManager.XmlLoader(self.xml_folder)
+        self.xml_manager = Source.FileManager.XmlManager(self.xml_loader)
 
         # Create list of Redditers using this bot and message ids
         self.redditter_list = []
@@ -34,8 +36,8 @@ class Bot:
 
         # Get last run time
         current_time = time.gmtime()
-        previous_hours = current_time[hours_index]
         previous_minutes = current_time[minutes_index]
+        previous_hours = current_time[hours_index]
 
         # Start running
         while True:
@@ -58,15 +60,9 @@ class Bot:
                             self.process_message(item)
 
                     print "Messages processed"
-
                     self.save()
 
                 if (current_time[hours_index] != previous_hours) and (current_time[hours_index] % 8 == 0):
-                    print current_time[hours_index]
-                    
-                    # Update previous hours to current hours
-                    previous_hours = current_time[hours_index]
-
                     # Get posts and send if updated
                     for account in self.redditter_object_list:
                         account.process_posts(self.reddit, 100)
@@ -75,7 +71,8 @@ class Bot:
                     print "Posts processed"
 
                 time.sleep(5)
-            except:
+
+            except Exception:
                 print "Exception handled"
                 time.sleep(10)
 
@@ -108,8 +105,11 @@ class Bot:
         self.redditter_list = Source.FileManager.load_id_list(self.redditor_folder)
         self.message_id_list = Source.FileManager.load_id_list(self.message_folder)
 
+        print self.redditter_list
+
         for redditor in self.redditter_list:
-            self.redditter_object_list.append(Source.Redditor.AccountManager(self.reddit, redditor, True))
+            self.xml_manager.add_redditor(redditor)
+            self.redditter_object_list.append(Source.Redditor.AccountManager(self.reddit, redditor, self.xml_manager))
         return
 
     def save(self):

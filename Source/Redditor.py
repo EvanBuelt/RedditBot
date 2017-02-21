@@ -5,7 +5,7 @@ __author__ = 'Evan'
 
 
 class AccountManager:
-    def __init__(self, reddit, name, subscribed):
+    def __init__(self, reddit, name, xml_manager):
         # Set name of redditter associated with class
         self.name = name
 
@@ -13,7 +13,7 @@ class AccountManager:
         self.redditor = reddit.redditor(name)
 
         # Keep track of whether the user is subscribed
-        self.subscribed = subscribed
+        self.subscribed = False
 
         # Get folder name of posts previously sent to particular redditter
         # along with subreddits associated with redditter
@@ -21,10 +21,7 @@ class AccountManager:
         self.subreddit_folder_name = name + "_sr.txt"
         self.keyword_folder_name = name + "_kw.txt"
 
-        # xml folder
-        self.xml_folder = "redditors.xml"
-        self.xml_loader = FileManager.XmlLoader(self.xml_folder)
-        self.xml_manager = FileManager.XmlManager(self.xml_loader)
+        self.xml_manager = xml_manager
 
         # List of ids of subreddits, subreddits, and keywords
         self.post_list = []
@@ -97,14 +94,43 @@ class AccountManager:
     # Load list of IDs, subreddits, and keywords appropriately
     def load_version_0_1(self):
         self.post_list = FileManager.load_id_list(self.id_folder_name)
-        self.subreddit_list = FileManager.load_id_list(self.subreddit_folder_name)
-        self.keyword_list = FileManager.load_id_list(self.keyword_folder_name)
+
+        save_xml = False
+
+        # If this file exists, then we need to update it to the xml version
+        if os.path.isfile(self.subreddit_folder_name):
+            # Get old list of subreddits
+            self.subreddit_list = FileManager.load_id_list(self.subreddit_folder_name)
+
+            # Save list to xml manager
+            self.xml_manager.add_subreddits(self.name, self.subreddit_list)
+
+            os.remove(self.subreddit_folder_name)
+            save_xml = True
+
+        if os.path.isfile(self.keyword_folder_name):
+            # Get old list of global keywords
+            self.keyword_list = FileManager.load_id_list(self.keyword_folder_name)
+
+            # Save list to xml manager
+            self.xml_manager.add_global_keywords(self.name, self.keyword_list)
+
+            os.remove(self.keyword_folder_name)
+            save_xml = True
+
+        self.subreddit_list = self.xml_manager.get_subreddits(self.name)
+        self.keyword_list = self.xml_manager.get_global_keywords(self.name)
+
+        print self.name
+        print self.subreddit_list
+        print self.keyword_list
+        
+        if save_xml:
+            self.save_version_0_1()
 
     # Save list of IDs and subreddits appropriately
     def save_version_0_1(self):
         FileManager.save_id_list(self.id_folder_name, self.post_list)
-        FileManager.save_id_list(self.subreddit_folder_name, self.subreddit_list)
-        FileManager.save_id_list(self.keyword_folder_name, self.keyword_list)
 
         self.xml_manager.save()
         return
