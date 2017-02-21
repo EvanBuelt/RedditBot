@@ -100,7 +100,6 @@ class XmlManager:
     Section for adding, removing, and getting global keywords
     '''
 
-    # Returns a list of global keywords for the redditor.  Returns empty list if no keywords were found
     def get_global_keywords(self, redditor_name):
         keyword_list = []
         # Get keyword object that contains a list of global keywords
@@ -113,7 +112,6 @@ class XmlManager:
 
         return keyword_list
 
-    # Adds list of global keywords to xml. Returns list of keywords added
     def add_global_keywords(self, redditor_name, keywords):
         # Get keyword object that contains a list of global keywords
         redditor_object = self.get_redditor_child(redditor_name)
@@ -156,7 +154,6 @@ class XmlManager:
     Section for adding, removing, and getting subreddit keywords
     '''
 
-    # Returns a list of global keywords for the redditor.  Returns empty list if no keywords were found
     def get_subreddit_keywords(self, redditor_name, subreddit):
         keyword_list = []
         # Get subreddit object that contains a list of subreddits
@@ -178,7 +175,6 @@ class XmlManager:
 
         return keyword_list
 
-    # Adds list of global keywords to xml. Returns list of keywords added
     def add_subreddit_keywords(self, redditor_name, subreddit, keywords):
         # Get subreddit object that contains a list of subreddits
         redditor_object = self.get_redditor_child(redditor_name)
@@ -239,7 +235,6 @@ class XmlManager:
     Section for adding, removing, and getting subreddits
     '''
 
-    # Gets list of subreddits for the redditor.  Returns empty list if none found
     def get_redditor_subreddits(self, redditor_name):
         # Get subreddit object that contains a list of subreddits
         redditor_object = self.get_redditor_child(redditor_name)
@@ -254,7 +249,6 @@ class XmlManager:
 
         return subreddit_list
 
-    # Adds list of subreddits to xml. Returns list of subreddits added
     def add_subreddits(self, redditor_name, subreddits):
         # Get subreddit object that contains a list of subreddits
         redditor_object = self.get_redditor_child(redditor_name)
@@ -297,7 +291,6 @@ class XmlManager:
     Section for adding, removing, and getting times
     '''
 
-    # Gets list of times for the redditor.  Returns empty list if none found
     def get_redditor_times(self, redditor_name):
         # Get time object that contains a list of times
         redditor = self.get_redditor_child(redditor_name)
@@ -311,7 +304,6 @@ class XmlManager:
 
         return times_list
 
-    # Adds list of times to xml. Returns list of times added
     def add_times(self, redditor_name, times):
         # Get time object that contains a list of times
         redditor_object = self.get_redditor_child(redditor_name)
@@ -354,7 +346,6 @@ class XmlManager:
     Support for adding, removing, and getting redditors, along with getting a list of redditor names and xml version
     '''
 
-    # Adds a new redditor to xml data. Sets up required elements in redditor. Returns true if setup and false otherwise
     def add_redditor(self, redditor_name):
         if self.root is not None:
 
@@ -381,12 +372,51 @@ class XmlManager:
             return True
         return False
 
-    # Get version of redditor's data.  As data is only updated on change, the structure of the data may be different,
-    # so this is useful when updating from old versions of data
-    def get_redditor_xml_version(self):
-        return 0, 0
+    def get_redditor_xml_version(self, redditor_name):
+        # Get redditor object to find version
+        redditor_object = self.get_redditor_child(redditor_name)
 
-    # Returns a list of names in XML folder.  If no names are found, returns an empty list
+        # Major/Minor version of 0.0 means no version was found
+        major_version = 0
+        minor_version = 0
+
+        # If data was loaded, root will not be None
+        if redditor_object is not None:
+            # Only get the version if the version string is found as a base attribute
+            if self.redditor_version_string in self.root.keys():
+                data = self.root.attrib[self.redditor_version_string]
+                data = data.split('.')
+
+                # No data means it wasn't found
+                if len(data) == 0:
+                    major_version = 0
+                    minor_version = 0
+
+                # Data length of 1 means there is no minor version
+                elif len(data) == 1:
+                    major_version = data[0]
+
+                # Data length of 2 means there is a major and minor version available
+                elif len(data) == 2:
+                    major_version, minor_version = data.split()
+
+                # If more than two versions are found, the data is likely in a future format
+                else:
+                    major_version = data[0]
+                    minor_version = data[1]
+
+        return major_version, minor_version
+
+    def set_redditor_xml_version(self, redditor_name, major_version, minor_version):
+        # Get redditor object to find version
+        redditor_object = self.get_redditor_child(redditor_name)
+
+        # Get version string
+        version_string = str(major_version) + '.' + str(minor_version)
+
+        # Update version
+        redditor_object.update(version_string)
+
     def get_redditor_name_list(self):
         redditor_list = []
         if self.root is not None:
@@ -398,7 +428,7 @@ class XmlManager:
     Internal support for functions
     '''
     def get_redditor_child(self, redditor_name):
-        redditor_object = None
+        redditor_object = ET.Element('redditor', {self.name_string: "None"})
         if self.root is not None:
             for child in self.root.getchildren():
                 if child.attrib[self.name_string] == redditor_name:
@@ -407,7 +437,7 @@ class XmlManager:
         return redditor_object
 
     def get_tag(self, xml_object, tag_name):
-        tag_object = None
+        tag_object = ET.Element(tag_name)
         if xml_object is not None:
             for child in xml_object.getchildren():
                 # TODO: check if tag exists (may not be needed here)
