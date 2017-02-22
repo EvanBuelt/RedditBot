@@ -424,7 +424,7 @@ class XmlManager:
         subscribed = False
 
         if self.subscribed_string in redditor_object.keys():
-            subscribed_string = redditor_object.attrib(self.subscribed_string)
+            subscribed_string = redditor_object.attrib[self.subscribed_string]
             if subscribed_string == 'True':
                 subscribed = True
 
