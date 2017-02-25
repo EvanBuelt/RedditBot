@@ -432,7 +432,7 @@ class XmlManager:
         version_string = str(major_version) + '.' + str(minor_version)
 
         # Update version
-        redditor_object.update(version_string)
+        redditor_object.set(self.redditor_version_string, version_string)
 
     def get_subscribed(self, redditor_name):
         redditor_object = self.get_redditor_child(redditor_name)
@@ -449,7 +449,7 @@ class XmlManager:
     def set_subscribed(self, redditor_name, subscribed):
         redditor_object = self.get_redditor_child(redditor_name)
 
-        redditor_object.update(self.subscribed_string, str(subscribed))
+        redditor_object.set(self.subscribed_string, str(subscribed))
         return
 
     def get_redditor_name_list(self):

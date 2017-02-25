@@ -150,6 +150,7 @@ class AccountManager:
     # Save list of IDs, subreddits, and keywords appropriately
     def save_version_0_1(self):
         try:
+            # Save list of submission ids
             FileManager.save_id_list(self.id_folder_name, self.post_list)
 
             # Set Version Number of redditor format

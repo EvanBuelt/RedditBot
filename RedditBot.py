@@ -58,8 +58,6 @@ class Bot:
                             self.message_id_list.append(item.id)
 
                             self.process_message(item)
-
-                    print "Messages processed"
                     self.save()
 
                 if (current_time[hours_index] != previous_hours) and (current_time[hours_index] % 8 == 0):
