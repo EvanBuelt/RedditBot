@@ -67,9 +67,6 @@ class Bot:
                     # Get posts and send if updated
                     for account in self.redditter_object_list:
                         account.process_posts(self.reddit, 100)
-                        account.save_version_0_1()
-
-                    print "Posts processed"
 
                 time.sleep(5)
 
@@ -116,6 +113,8 @@ class Bot:
     def save(self):
         Source.FileManager.save_id_list(self.redditor_folder, self.redditter_list)
         Source.FileManager.save_id_list(self.message_folder, self.message_id_list)
+        for account in self.redditter_object_list:
+            account.save_version_0_1()
         return
 
 NewsBot = Bot("newsbot")

@@ -4,6 +4,23 @@ import FileManager
 __author__ = 'Evan'
 
 
+class Subreddit:
+    def __init__(self, name):
+        self.name = name
+        self.keyword_list = []
+        return
+
+    def add_keyword(self, keyword):
+        if keyword not in self.keyword_list:
+            self.keyword_list.append(keyword)
+        return
+
+    def remove_keyword(self, keyword):
+        if keyword in self.keyword_list:
+            self.keyword_list.remove(keyword)
+        return
+
+
 class AccountManager:
     def __init__(self, reddit, name, xml_manager):
         # Set name of redditter associated with class
@@ -17,7 +34,6 @@ class AccountManager:
 
         # Get folder name of posts previously sent to particular redditter
         self.id_folder_name = name + "_id.txt"
-
         self.xml_manager = xml_manager
 
         # List of ids of subreddits, subreddits, and keywords
@@ -25,45 +41,67 @@ class AccountManager:
         self.subreddit_list = []
         self.keyword_list = []
 
+        # Version number of redditor
+        self.version = ""
+
         self.load_version_0_1()
         return
 
     # Functionality to add/remove subreddits
     def add_subreddit(self, subreddit_name):
-        if subreddit_name not in self.subreddit_list:
-            self.subreddit_list.append(subreddit_name)
-            self.save_version_0_1()
+        found = False
+        for subreddit in self.subreddit_list:
+            if subreddit.name == subreddit_name:
+                found = True
+
+        if not found:
+            self.subreddit_list.append(Subreddit(subreddit_name))
         return
 
     def remove_subreddit(self, subreddit_name):
-        if subreddit_name in self.subreddit_list:
-            self.subreddit_list.remove(subreddit_name)
-            self.save_version_0_1()
+        subreddit_to_remove = None
+        for subreddit in self.subreddit_list:
+            if subreddit.name == subreddit_name:
+                subreddit_to_remove = subreddit
+
+        if subreddit_to_remove is not None:
+            self.subreddit_list.remove(subreddit_to_remove)
         return
 
-    # Functionality to add/remove keywords
-    def add_keyword(self, keyword_name):
+    # Functionality to add/remove global keywords
+    def add_global_keyword(self, keyword_name):
         if keyword_name not in self.keyword_list:
             self.keyword_list.append(keyword_name)
-            self.save_version_0_1()
         return
 
-    def remove_keyword(self, keyword_name):
+    def remove_global_keyword(self, keyword_name):
         if keyword_name in self.keyword_list:
             self.keyword_list.remove(keyword_name)
-            self.save_version_0_1()
+        return
+
+    # Functionality to add/remove keywords to subreddits
+    def add_subreddit_keyword(self, keyword_name, subreddit_name):
+        for subreddit in self.subreddit_list:
+            if subreddit.name == subreddit_name:
+                subreddit.add_keyword(keyword_name)
+        return
+
+    def remove_subreddit_keyword(self, keyword_name, subreddit_name):
+        for subreddit in self.subreddit_list:
+            if subreddit.name == subreddit_name:
+                subreddit.remove_keyword(keyword_name)
         return
 
     # Get posts from subreddits and send them if keyword is found
     def process_posts(self, reddit, limit_per_subreddit):
         if self.subscribed:
-            for subreddit_name in self.subreddit_list:
-                self.send_posts(reddit, subreddit_name, limit_per_subreddit)
+            for subreddit in self.subreddit_list:
+                self.send_posts(reddit, subreddit, limit_per_subreddit)
         return
 
-    def send_posts(self, reddit, subreddit_name, limit_per_subreddit):
-        subreddit = reddit.subreddit(subreddit_name)
-        title = "New posts from " + subreddit_name
+    def send_posts(self, reddit, subreddit_object, limit_per_subreddit):
+        subreddit = reddit.subreddit(subreddit_object.name)
+        title = "New posts from " + subreddit_object.name
         message = ""
         i = 1
         for submission in subreddit.new(limit=limit_per_subreddit):
@@ -71,8 +109,13 @@ class AccountManager:
             if submission.id not in self.post_list:
                 self.post_list.append(submission.id)
 
+                combined_keywords = [keyword for keyword in self.keyword_list]
+                for keyword in subreddit_object.keyword_list:
+                    if keyword not in combined_keywords:
+                        combined_keywords.append(keyword)
+
                 # Iterate over all keywords to see if they are found in the title
-                for keyword in self.keyword_list:
+                for keyword in combined_keywords:
                     if keyword in submission.title:
                         message = message + str(i) + ". [" + submission.title + "](" + submission.permalink + ").  "
                         i += 1
@@ -92,7 +135,10 @@ class AccountManager:
     def load_version_0_1(self):
         self.post_list = FileManager.load_id_list(self.id_folder_name)
 
-        self.subreddit_list = self.xml_manager.get_subreddits(self.name)
+        self.subreddit_list = []
+        for subreddit_name in self.xml_manager.get_subreddits(self.name):
+            self.subreddit_list.append(Subreddit(subreddit_name))
+
         self.keyword_list = self.xml_manager.get_global_keywords(self.name)
         self.subscribed = self.xml_manager.get_subscribed(self.name)
 
@@ -103,14 +149,44 @@ class AccountManager:
 
     # Save list of IDs, subreddits, and keywords appropriately
     def save_version_0_1(self):
-        FileManager.save_id_list(self.id_folder_name, self.post_list)
+        try:
+            FileManager.save_id_list(self.id_folder_name, self.post_list)
 
-        self.xml_manager.set_redditor_xml_version(self.name, 0, 1)
-        self.xml_manager.add_subreddits(self.name, self.subreddit_list)
-        self.xml_manager.add_global_keywords(self.name, self.keyword_list)
-        self.xml_manager.set_subscribed(self.name, self.subscribed)
+            # Set Version Number of redditor format
+            self.xml_manager.set_redditor_xml_version(self.name, 0, 1)
 
-        self.xml_manager.save()
+            # Save subreddits and subreddit keywords
+            subreddit_name_list = []
+
+            for subreddit_object in self.subreddit_list:
+                # Append name of subreddit to list
+                subreddit_name_list.append(subreddit_object.name)
+
+            # Save list of subreddits
+            self.xml_manager.clear_subreddits(self.name)
+            self.xml_manager.add_subreddits(self.name, subreddit_name_list)
+
+            # Save list of subreddit keywords
+            for subreddit_object in self.subreddit_list:
+                # Syntactic sugar
+                name = subreddit_object.name
+                keyword_list = subreddit_object.keyword_list
+
+                # Clear subreddit keywords and add current keywords (in case a few were deleted)
+                self.xml_manager.clear_subreddit_keywords(self.name, name)
+                self.xml_manager.add_subreddit_keywords(self.name, name, keyword_list)
+
+            # Save global keywords
+            self.xml_manager.clear_global_keywords(self.name)
+            self.xml_manager.add_global_keywords(self.name, self.keyword_list)
+
+            # Save whether user is subscribed
+            self.xml_manager.set_subscribed(self.name, self.subscribed)
+
+            self.xml_manager.save()
+        except:
+            print "Failed to save data for " + self.name
+
         return
 
 
@@ -127,7 +203,7 @@ class MessageManager:
                              ("Remove Subreddits", "Removes multiple subreddits from your list of subreddits this bot checks."),
                              ("Get Subreddits", "Gets list of subreddits.  Same as 'Get Subreddit' command"),
                              ("Add Keyword", "Adds a single keyword to check in the list of subreddits."),
-                             ("Remove Keywords", "Removes a single keyword from your list of keywords."),
+                             ("Remove Keyword", "Removes a single keyword from your list of keywords."),
                              ("Get Keyword", "Gets list of keywords.  Same as 'Get Keywords' command"),
                              ("Add Keywords", "Adds multiple keywords to check in the list of subreddits."),
                              ("Remove Keywords", "Removes multiple keywords from your list of keywords."),
@@ -197,7 +273,7 @@ class MessageManager:
                     else:
                         self.process_unknown(message, redditter_object)
 
-            elif instruction.lower() is "remove":
+            elif instruction.lower() == "remove":
                 print "First instruction is remove"
                 # If the instruction is add, then the next instruction is either subreddit or keyword
                 if len(words) >= 3:
@@ -240,12 +316,12 @@ class MessageManager:
         reply_message = "Your subreddits: "
         first = True
 
-        for subreddit in redditter_object.subreddit_list:
+        for subreddit_object in redditter_object.subreddit_list:
             if first:
-                reply_message = reply_message + subreddit
+                reply_message = reply_message + subreddit_object.name
                 first = False
             else:
-                reply_message = reply_message + ", " + subreddit
+                reply_message = reply_message + ", " + subreddit_object.name
 
         message.reply(reply_message)
         return
@@ -301,40 +377,44 @@ class MessageManager:
 
         for i in range(2, len(words)):
             keyword = words[i]
-            redditter_object.add_keyword(keyword)
+            redditter_object.add_global_keyword(keyword)
 
         message.reply("Your requested keywords have been added")
         return
 
     def process_remove_keyword(self, message, redditter_object):
+        print "Removing keyword"
         # Get body of message and split into words
         text = message.body
         words = text.split(' ')
 
         for i in range(2, len(words)):
             keyword = words[i]
-            redditter_object.remove_keyword(keyword)
+            redditter_object.remove_global_keyword(keyword)
 
         message.reply("Your requested keywords have been removed")
         return
 
     def process_subscribe(self, message, redditter_object):
+        print "Subscribing " + redditter_object.name
         redditter_object.subscribed = True
 
         message.reply("You have successfully subscribed to the News Bot.  Thank you for the interest.  Send 'unsubscribe' if you no longer wish to receive messages.")
         return
 
     def process_unsubscribe(self, message, redditter_object):
+        print "Unsubscribing " + redditter_object.name
         redditter_object.subscribed = False
 
         message.reply("You have successfully subscribed to the News Bot.  Thank you for the interest.  Send 'unsubscribe' if you no longer wish to receive messages.")
         return
 
     def process_clear(self, message, redditter_object):
-
+        print "Clearing all data"
         return
 
     def process_unknown(self, message, redditter_object):
+        print "Unknown command processed"
         body = "I am unable to process your command.  Here is a list of available commands: "
         for menu in self.command_menu:
             (command, text) = menu

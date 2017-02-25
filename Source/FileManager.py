@@ -151,6 +151,10 @@ class XmlManager:
             keyword_object.remove(keyword_element)
         return
 
+    def clear_global_keywords(self, redditor_name):
+        global_keywords = self.get_global_keywords(redditor_name)
+        self.remove_global_keywords(redditor_name, global_keywords)
+
     '''
     Section for adding, removing, and getting subreddit keywords
     '''
@@ -232,6 +236,10 @@ class XmlManager:
                 subreddit_keyword_object.remove(keyword_element)
         return
 
+    def clear_subreddit_keywords(self, redditor_name, subreddit):
+        subreddit_keywords = self.get_subreddit_keywords(redditor_name, subreddit)
+        self.remove_subreddit_keywords(redditor_name, subreddit, subreddit_keywords)
+
     '''
     Section for adding, removing, and getting subreddits
     '''
@@ -288,6 +296,10 @@ class XmlManager:
             subreddit_object.remove(subreddit_element)
         return
 
+    def clear_subreddits(self, redditor_name):
+        subreddits = self.get_subreddits(redditor_name)
+        self.remove_subreddits(redditor_name, subreddits)
+
     '''
     Section for adding, removing, and getting times
     '''
@@ -342,6 +354,10 @@ class XmlManager:
         for time_element in subreddit_elements_removal:
             time_object.remove(time_element)
         return
+
+    def clear_times(self, redditor_name):
+        times = self.get_times(redditor_name)
+        self.remove_times(redditor_name, times)
 
     '''
     Support for adding, removing, and getting redditors, along with getting a list of redditor names and xml version
