@@ -28,40 +28,9 @@
         <entry file="file://$PROJECT_DIR$/RedditBot.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="64" column="51" selection-start-line="64" selection-start-column="51" selection-end-line="64" selection-end-column="51" />
+              <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.46303502">
-              <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Redditor.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Source/Redditor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="196" column="8" selection-start-line="196" selection-start-column="8" selection-end-line="210" selection-end-column="103" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-                <element signature="e#12577#13042#0" expanded="false" />
-                <element signature="e#13117#13596#0" expanded="false" />
-                <element signature="e#13670#14015#0" expanded="false" />
-                <element signature="e#14092#14444#0" expanded="false" />
-                <element signature="e#14516#14951#0" expanded="false" />
-                <element signature="e#15023#15365#0" expanded="false" />
-                <element signature="e#15440#15789#0" expanded="false" />
-                <element signature="e#15859#16129#0" expanded="false" />
-                <element signature="e#16201#16474#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -77,69 +46,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileManager.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Source/FileManager.py">
+      <file leaf-file-name="Redditor.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Source/Redditor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="448" column="32" selection-start-line="448" selection-start-column="32" selection-end-line="448" selection-end-column="32" />
+            <state vertical-scroll-proportion="-2.0110905">
+              <caret line="119" column="4" selection-start-line="119" selection-start-column="4" selection-end-line="119" selection-end-column="4" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-                <element signature="e#88#2597#0" expanded="false" />
-                <element signature="e#828#2085#0" expanded="false" />
-                <element signature="e#2153#2431#0" expanded="false" />
-                <element signature="e#2486#2597#0" expanded="false" />
-                <element signature="e#3350#3390#0" expanded="false" />
-                <element signature="e#3529#3975#0" expanded="false" />
-                <element signature="e#4045#4892#0" expanded="false" />
-                <element signature="e#4965#5633#0" expanded="false" />
-                <element signature="e#5695#5820#0" expanded="false" />
-                <element signature="e#5976#6711#0" expanded="false" />
-                <element signature="e#6795#7987#0" expanded="false" />
-                <element signature="e#8074#9096#0" expanded="false" />
-                <element signature="e#9172#9331#0" expanded="false" />
-                <element signature="e#9460#9908#0" expanded="false" />
-                <element signature="e#9975#10835#0" expanded="false" />
-                <element signature="e#10905#11589#0" expanded="false" />
-                <element signature="e#11646#11751#0" expanded="false" />
-                <element signature="e#11870#12218#0" expanded="false" />
-                <element signature="e#12275#13017#0" expanded="false" />
-                <element signature="e#13077#13695#0" expanded="false" />
-                <element signature="e#13747#13832#0" expanded="false" />
-                <element signature="e#14019#15102#0" expanded="false" />
-                <element signature="e#17524#17710#0" expanded="false" />
-                <element signature="e#17820#18054#0" expanded="false" />
-                <element signature="e#18109#18373#0" expanded="false" />
+                <element signature="e#13477#13942#0" expanded="false" />
+                <element signature="e#14017#14496#0" expanded="false" />
+                <element signature="e#14570#14915#0" expanded="false" />
+                <element signature="e#14992#15344#0" expanded="false" />
+                <element signature="e#15416#15851#0" expanded="false" />
+                <element signature="e#15923#16265#0" expanded="false" />
+                <element signature="e#16340#16689#0" expanded="false" />
+                <element signature="e#16759#17029#0" expanded="false" />
+                <element signature="e#17101#17374#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DesignThought.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DesignThought.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TODO.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TODO.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="redditors.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/redditors.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -172,9 +95,9 @@
         <option value="$PROJECT_DIR$/redditors2.xml" />
         <option value="$PROJECT_DIR$/Source/FileManager.py" />
         <option value="$PROJECT_DIR$/redditors.xml" />
-        <option value="$PROJECT_DIR$/Source/Redditor.py" />
-        <option value="$PROJECT_DIR$/RedditBot.py" />
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/RedditBot.py" />
+        <option value="$PROJECT_DIR$/Source/Redditor.py" />
       </list>
     </option>
   </component>
@@ -182,6 +105,7 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="1280" />
     <option name="width" value="1280" />
     <option name="height" value="1040" />
   </component>
@@ -519,7 +443,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="1040" extended-state="0" />
+    <frame x="1280" y="0" width="1280" height="1040" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2673108" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -555,13 +479,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/Source/Redditor.py</url>
-          <line>405</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="21" />
     </breakpoint-manager>
     <watches-manager />
@@ -583,15 +500,15 @@
           <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#12577#13042#0" expanded="false" />
-            <element signature="e#13117#13596#0" expanded="false" />
-            <element signature="e#13670#14015#0" expanded="false" />
-            <element signature="e#14092#14444#0" expanded="false" />
-            <element signature="e#14516#14951#0" expanded="false" />
-            <element signature="e#15023#15365#0" expanded="false" />
-            <element signature="e#15440#15789#0" expanded="false" />
-            <element signature="e#15859#16129#0" expanded="false" />
-            <element signature="e#16201#16474#0" expanded="false" />
+            <element signature="e#13477#13942#0" expanded="false" />
+            <element signature="e#14017#14496#0" expanded="false" />
+            <element signature="e#14570#14915#0" expanded="false" />
+            <element signature="e#14992#15344#0" expanded="false" />
+            <element signature="e#15416#15851#0" expanded="false" />
+            <element signature="e#15923#16265#0" expanded="false" />
+            <element signature="e#16340#16689#0" expanded="false" />
+            <element signature="e#16759#17029#0" expanded="false" />
+            <element signature="e#17101#17374#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -671,15 +588,15 @@
           <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#12577#13042#0" expanded="false" />
-            <element signature="e#13117#13596#0" expanded="false" />
-            <element signature="e#13670#14015#0" expanded="false" />
-            <element signature="e#14092#14444#0" expanded="false" />
-            <element signature="e#14516#14951#0" expanded="false" />
-            <element signature="e#15023#15365#0" expanded="false" />
-            <element signature="e#15440#15789#0" expanded="false" />
-            <element signature="e#15859#16129#0" expanded="false" />
-            <element signature="e#16201#16474#0" expanded="false" />
+            <element signature="e#13477#13942#0" expanded="false" />
+            <element signature="e#14017#14496#0" expanded="false" />
+            <element signature="e#14570#14915#0" expanded="false" />
+            <element signature="e#14992#15344#0" expanded="false" />
+            <element signature="e#15416#15851#0" expanded="false" />
+            <element signature="e#15923#16265#0" expanded="false" />
+            <element signature="e#16340#16689#0" expanded="false" />
+            <element signature="e#16759#17029#0" expanded="false" />
+            <element signature="e#17101#17374#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -715,14 +632,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/redditors.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TODO.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -735,22 +644,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DesignThought.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/redditors.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -789,10 +682,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46303502">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DesignThought.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redditors.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.03142329">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redditors.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/RedditBot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="64" column="51" selection-start-line="64" selection-start-column="51" selection-end-line="64" selection-end-column="51" />
+          <caret line="68" column="0" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
@@ -801,28 +726,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Source/Redditor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="196" column="8" selection-start-line="196" selection-start-column="8" selection-end-line="210" selection-end-column="103" />
+        <state vertical-scroll-proportion="-2.0110905">
+          <caret line="119" column="4" selection-start-line="119" selection-start-column="4" selection-end-line="119" selection-end-column="4" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#12577#13042#0" expanded="false" />
-            <element signature="e#13117#13596#0" expanded="false" />
-            <element signature="e#13670#14015#0" expanded="false" />
-            <element signature="e#14092#14444#0" expanded="false" />
-            <element signature="e#14516#14951#0" expanded="false" />
-            <element signature="e#15023#15365#0" expanded="false" />
-            <element signature="e#15440#15789#0" expanded="false" />
-            <element signature="e#15859#16129#0" expanded="false" />
-            <element signature="e#16201#16474#0" expanded="false" />
+            <element signature="e#13477#13942#0" expanded="false" />
+            <element signature="e#14017#14496#0" expanded="false" />
+            <element signature="e#14570#14915#0" expanded="false" />
+            <element signature="e#14992#15344#0" expanded="false" />
+            <element signature="e#15416#15851#0" expanded="false" />
+            <element signature="e#15923#16265#0" expanded="false" />
+            <element signature="e#16340#16689#0" expanded="false" />
+            <element signature="e#16759#17029#0" expanded="false" />
+            <element signature="e#17101#17374#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46303502">
-          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>

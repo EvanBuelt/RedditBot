@@ -13,12 +13,14 @@ class Subreddit:
     def add_keyword(self, keyword):
         if keyword not in self.keyword_list:
             self.keyword_list.append(keyword)
-        return
+            return True
+        return False
 
     def remove_keyword(self, keyword):
         if keyword in self.keyword_list:
             self.keyword_list.remove(keyword)
-        return
+            return True
+        return False
 
 
 class AccountManager:
@@ -47,7 +49,7 @@ class AccountManager:
         self.load_version_0_1()
         return
 
-    # Functionality to add/remove subreddits
+    # Functionality to add/remove/get subreddits
     def add_subreddit(self, subreddit_name):
         found = False
         for subreddit in self.subreddit_list:
@@ -56,7 +58,8 @@ class AccountManager:
 
         if not found:
             self.subreddit_list.append(Subreddit(subreddit_name))
-        return
+            return True
+        return False
 
     def remove_subreddit(self, subreddit_name):
         subreddit_to_remove = None
@@ -66,32 +69,55 @@ class AccountManager:
 
         if subreddit_to_remove is not None:
             self.subreddit_list.remove(subreddit_to_remove)
-        return
+            return True
+        return False
 
-    # Functionality to add/remove global keywords
+    def get_subreddit_name_list(self):
+        name_list = []
+        for subreddit in self.subreddit_list:
+            name_list.append(subreddit.name)
+        return name_list
+
+    # Functionality to add/remove/get global keywords
     def add_global_keyword(self, keyword_name):
         if keyword_name not in self.keyword_list:
             self.keyword_list.append(keyword_name)
-        return
+            return True
+        return False
 
     def remove_global_keyword(self, keyword_name):
         if keyword_name in self.keyword_list:
             self.keyword_list.remove(keyword_name)
-        return
+            return True
+        return False
 
-    # Functionality to add/remove keywords to subreddits
+    def get_global_keyword_list(self):
+        keyword_list = []
+        for keyword_name in self.keyword_list:
+            keyword_list.append(keyword_name)
+        return keyword_list
+
+    # Functionality to add/remove/get keywords in subreddits
     def add_subreddit_keyword(self, keyword_name, subreddit_name):
         for subreddit in self.subreddit_list:
             if subreddit.name == subreddit_name:
-                subreddit.add_keyword(keyword_name)
-        return
+                return subreddit.add_keyword(keyword_name)
+        return False
 
     def remove_subreddit_keyword(self, keyword_name, subreddit_name):
         for subreddit in self.subreddit_list:
             if subreddit.name == subreddit_name:
-                subreddit.remove_keyword(keyword_name)
-        return
+                return subreddit.remove_keyword(keyword_name)
+        return False
 
+    def get_subreddit_keyword_list(self, subreddit_name):
+        keyword_list = []
+        for subreddit in self.subreddit_list:
+            if subreddit.name == subreddit_name:
+                for keyword in subreddit.keyword_list:
+                    keyword_list.append(keyword)
+        return keyword_list
+    
     # Get posts from subreddits and send them if keyword is found
     def process_posts(self, reddit, limit_per_subreddit):
         if self.subscribed:
