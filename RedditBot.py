@@ -2,6 +2,7 @@ import time
 import praw
 import Source.Redditor
 import Source.FileManager
+import Source.MessageManager
 
 
 class Bot:
@@ -25,7 +26,7 @@ class Bot:
         self.message_list = []
 
         # Setup Message manager
-        self.message_manager = Source.Redditor.MessageManager()
+        self.message_manager = Source.MessageManager.MessageManager()
 
         self.load()
 
