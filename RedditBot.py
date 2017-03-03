@@ -70,8 +70,8 @@ class Bot:
 
                 time.sleep(5)
 
-            except Exception:
-                print "Exception handled"
+            except Exception as instance:
+                print "Exception handled: ", type(instance), instance
                 time.sleep(10)
 
     def process_message(self, message):

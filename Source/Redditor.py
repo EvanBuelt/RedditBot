@@ -1,3 +1,5 @@
+import time
+import prawcore.exceptions as PExceptions
 import FileManager
 
 __author__ = 'Evan'
@@ -41,6 +43,7 @@ class AccountManager:
         self.post_list = []
         self.subreddit_list = []
         self.keyword_list = []
+        self.time_list = []
 
         # Version number of redditor
         self.version = ""
@@ -153,8 +156,19 @@ class AccountManager:
 
     # Abstraction to send a message
     def message(self, title, message):
-        self.redditor.message(title, message)
-        return
+        sent = False
+        wait_times = [1, 2, 4, 8, 16, 32]
+        index = 0
+        while not sent:
+            try:
+                self.redditor.message(title, message)
+                sent = True
+            except PExceptions.RequestException:
+                if index >= len(wait_times):
+                    break
+                sleep_time = wait_times[index]
+                time.sleep(sleep_time)
+                index += 1
 
     # Load list of IDs, subreddits, and keywords appropriately
     def load_version_0_1(self):
