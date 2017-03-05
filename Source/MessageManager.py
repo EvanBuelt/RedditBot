@@ -153,6 +153,7 @@ class MessageManager:
                 message.reply(reply)
                 sent = True
             except PExceptions.RequestException:
+                print "Request Exception handled in replying to a message"
                 if index >= len(wait_times):
                     break
                 sleep_time = wait_times[index]

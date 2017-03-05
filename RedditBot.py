@@ -11,11 +11,11 @@ class Bot:
         self.reddit = praw.Reddit(name)
 
         # Get list of folders for redditors and messages
-        self.redditor_folder = "redditors.txt"
-        self.message_folder = "message_id.txt"
+        self.redditor_folder = "data/redditors.txt"
+        self.message_folder = "data/message_id.txt"
 
         # xml folder
-        self.xml_folder = "redditors.xml"
+        self.xml_folder = "data/redditors.xml"
         self.xml_loader = Source.FileManager.XmlLoader(self.xml_folder)
         self.xml_manager = Source.FileManager.XmlManager(self.xml_loader)
 

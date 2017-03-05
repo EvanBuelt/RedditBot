@@ -36,7 +36,7 @@ class AccountManager:
         self.subscribed = False
 
         # Get folder name of posts previously sent to particular redditter
-        self.id_folder_name = name + "_id.txt"
+        self.id_folder_name = "data/" + name + "_id.txt"
         self.xml_manager = xml_manager
 
         # List of ids of subreddits, subreddits, and keywords
@@ -128,30 +128,43 @@ class AccountManager:
         return
 
     def send_posts(self, reddit, subreddit_object, limit_per_subreddit):
-        subreddit = reddit.subreddit(subreddit_object.name)
-        title = "New posts from " + subreddit_object.name
-        message = ""
-        i = 1
-        for submission in subreddit.new(limit=limit_per_subreddit):
-            # Only look at ids not already found
-            if submission.id not in self.post_list:
-                self.post_list.append(submission.id)
+        sent = False
+        wait_times = [2, 4, 8, 16]
+        index = 0
+        while not sent:
+            try:
+                subreddit = reddit.subreddit(subreddit_object.name)
+                title = "New posts from " + subreddit_object.name
+                message = ""
+                sent = True
+                i = 1
+                for submission in subreddit.new(limit=limit_per_subreddit):
+                    # Only look at ids not already found
+                    if submission.id not in self.post_list:
+                        self.post_list.append(submission.id)
 
-                combined_keywords = [keyword for keyword in self.keyword_list]
-                for keyword in subreddit_object.keyword_list:
-                    if keyword not in combined_keywords:
-                        combined_keywords.append(keyword)
+                        combined_keywords = [keyword for keyword in self.keyword_list]
+                        for keyword in subreddit_object.keyword_list:
+                            if keyword not in combined_keywords:
+                                combined_keywords.append(keyword)
 
-                # Iterate over all keywords to see if they are found in the title
-                for keyword in combined_keywords:
-                    if keyword in submission.title:
-                        message = message + str(i) + ". [" + submission.title + "](" + submission.permalink + ").  "
-                        i += 1
-                        break
+                        # Iterate over all keywords to see if they are found in the title
+                        for keyword in combined_keywords:
+                            if keyword in submission.title:
+                                message = message + str(i) + ". [" + submission.title + "](" + submission.permalink + ").  "
+                                i += 1
+                                break
 
-        # If there was something found, send a message to the redditor
-        if message is not "":
-            self.redditor.message(title, message)
+                # If there was something found, send a message to the redditor
+                if message is not "":
+                    self.message(title, message)
+            except PExceptions.RequestException:
+                print "Request Exception handled in getting subreddit"
+                if index >= len(wait_times):
+                    break
+                sleep_time = wait_times[index]
+                time.sleep(sleep_time)
+                index += 1
         return
 
     # Abstraction to send a message
@@ -164,6 +177,7 @@ class AccountManager:
                 self.redditor.message(title, message)
                 sent = True
             except PExceptions.RequestException:
+                print "Request Exception handled in sending a message"
                 if index >= len(wait_times):
                     break
                 sleep_time = wait_times[index]
