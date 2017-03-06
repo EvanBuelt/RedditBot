@@ -51,31 +51,13 @@ class Bot:
                     # Update previous minutes to current minutes
                     previous_minutes = current_time[minutes_index]
 
-                    messages = []
-                    received = False
-                    wait_times = [1, 2, 4, 8, 16, 32]
-                    index = 0
+                    # Get list of messages from inbox
+                    messages = self.get_inbox_messages()
 
-                    while not received:
-                        try:
-                            # Get messages and process them
-                            messages = self.reddit.inbox.all(limit=25)
-                            received = True
-                        except PExceptions.RequestException:
-                            print "Request Exception handled in getting inbox"
-                            if index >= len(wait_times):
-                                break
-                            sleep_time = wait_times[index]
-                            time.sleep(sleep_time)
-                            index += 1
+                    # Process messages
+                    self.process_message(messages)
 
-                    for item in messages:
-                        if item.id not in self.message_id_list:
-                            print "New Message received"
-                            # Only look at ids not already found
-                            self.message_id_list.append(item.id)
-
-                            self.process_message(item)
+                    # Save in case data updated
                     self.save()
             except Exception as instance:
                 print "Exception handled in checking inbox: ", type(instance), instance
@@ -88,17 +70,45 @@ class Bot:
                     for account in self.redditter_object_list:
                         account.process_posts(self.reddit, 100)
                     print "Posts processed"
+
             except Exception as instance:
                 print "Exception handled in sending: ", type(instance), instance
                 time.sleep(10)
             time.sleep(5)
 
-    def process_message(self, message):
-        # Get sender of message
-        redditer_name = message.author
-        redditter_object = self.get_redditer_object(redditer_name)
+    def get_inbox_messages(self):
+        messages = []
+        received = False
+        wait_times = [1, 2, 4, 8, 16, 32]
+        index = 0
 
-        self.message_manager.process_message(message, redditter_object)
+        while not received:
+            try:
+                # Get messages and process them
+                messages = self.reddit.inbox.all(limit=25)
+                received = True
+            except PExceptions.RequestException:
+                print "Request Exception handled in getting inbox"
+                if index >= len(wait_times):
+                    break
+                sleep_time = wait_times[index]
+                time.sleep(sleep_time)
+                index += 1
+        return messages
+
+    def process_message(self, message_list):
+        for message in message_list:
+            if message.id not in self.message_id_list:
+                print "New Message received"
+                # Only look at ids not already found
+                self.message_id_list.append(message.id)
+
+                # Get sender of message
+                redditer_name = message.author
+                redditter_object = self.get_redditer_object(redditer_name)
+
+                # Process messages
+                self.message_manager.process_message(message, redditter_object)
 
     def get_redditer_object(self, name):
         redditter = None
