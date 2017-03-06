@@ -24,14 +24,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="RedditBot.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="RedditBot.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RedditBot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.8798521">
+              <caret line="67" column="66" selection-start-line="67" selection-start-column="66" selection-end-line="67" selection-end-column="66" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="redditors.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/redditors.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -48,24 +58,40 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Redditor.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Source/Redditor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.2569317">
-              <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="redditors.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data/redditors.xml">
+      <file leaf-file-name="FileManager.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Source/FileManager.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-              <folding />
+              <caret line="200" column="50" selection-start-line="200" selection-start-column="50" selection-end-line="200" selection-end-column="50" />
+              <folding>
+                <element signature="e#88#2597#0" expanded="false" />
+                <element signature="e#828#2085#0" expanded="false" />
+                <element signature="e#2153#2431#0" expanded="false" />
+                <element signature="e#2486#2597#0" expanded="false" />
+                <element signature="e#3350#3390#0" expanded="false" />
+                <element signature="e#3529#3975#0" expanded="false" />
+                <element signature="e#4045#4892#0" expanded="false" />
+                <element signature="e#4965#5633#0" expanded="false" />
+                <element signature="e#5695#5820#0" expanded="false" />
+                <element signature="e#8082#9104#0" expanded="false" />
+                <element signature="e#9180#9339#0" expanded="false" />
+                <element signature="e#9468#9916#0" expanded="false" />
+                <element signature="e#9983#10843#0" expanded="false" />
+                <element signature="e#10913#11597#0" expanded="false" />
+                <element signature="e#11654#11759#0" expanded="false" />
+                <element signature="e#11878#12226#0" expanded="false" />
+                <element signature="e#12283#13025#0" expanded="false" />
+                <element signature="e#13085#13703#0" expanded="false" />
+                <element signature="e#13755#13840#0" expanded="false" />
+                <element signature="e#14027#15110#0" expanded="false" />
+                <element signature="e#15175#16493#0" expanded="false" />
+                <element signature="e#16588#16891#0" expanded="false" />
+                <element signature="e#16946#17276#0" expanded="false" />
+                <element signature="e#17343#17484#0" expanded="false" />
+                <element signature="e#17532#17718#0" expanded="false" />
+                <element signature="e#17828#18062#0" expanded="false" />
+                <element signature="e#18117#18381#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -96,12 +122,13 @@
         <option value="$PROJECT_DIR$/TODO.txt" />
         <option value="$PROJECT_DIR$/DesignThought.txt" />
         <option value="$PROJECT_DIR$/redditors2.xml" />
-        <option value="$PROJECT_DIR$/Source/FileManager.py" />
         <option value="$PROJECT_DIR$/redditors.xml" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/Source/MessageManager.py" />
         <option value="$PROJECT_DIR$/RedditBot.py" />
         <option value="$PROJECT_DIR$/Source/Redditor.py" />
+        <option value="$PROJECT_DIR$/Source/FileManager.py" />
+        <option value="$PROJECT_DIR$/data/redditors.xml" />
       </list>
     </option>
   </component>
@@ -513,6 +540,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#1470#1741#0" expanded="false" />
+            <element signature="e#1799#2118#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -533,6 +562,8 @@
           <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#1470#1741#0" expanded="false" />
+            <element signature="e#1799#2118#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -542,7 +573,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#9#0" expanded="false" />
             <element signature="e#88#2597#0" expanded="false" />
             <element signature="e#828#2085#0" expanded="false" />
             <element signature="e#2153#2431#0" expanded="false" />
@@ -552,22 +582,24 @@
             <element signature="e#4045#4892#0" expanded="false" />
             <element signature="e#4965#5633#0" expanded="false" />
             <element signature="e#5695#5820#0" expanded="false" />
-            <element signature="e#5976#6711#0" expanded="false" />
-            <element signature="e#6795#7987#0" expanded="false" />
-            <element signature="e#8074#9096#0" expanded="false" />
-            <element signature="e#9172#9331#0" expanded="false" />
-            <element signature="e#9460#9908#0" expanded="false" />
-            <element signature="e#9975#10835#0" expanded="false" />
-            <element signature="e#10905#11589#0" expanded="false" />
-            <element signature="e#11646#11751#0" expanded="false" />
-            <element signature="e#11870#12218#0" expanded="false" />
-            <element signature="e#12275#13017#0" expanded="false" />
-            <element signature="e#13077#13695#0" expanded="false" />
-            <element signature="e#13747#13832#0" expanded="false" />
-            <element signature="e#14019#15102#0" expanded="false" />
-            <element signature="e#17524#17710#0" expanded="false" />
-            <element signature="e#17820#18054#0" expanded="false" />
-            <element signature="e#18109#18373#0" expanded="false" />
+            <element signature="e#8082#9104#0" expanded="false" />
+            <element signature="e#9180#9339#0" expanded="false" />
+            <element signature="e#9468#9916#0" expanded="false" />
+            <element signature="e#9983#10843#0" expanded="false" />
+            <element signature="e#10913#11597#0" expanded="false" />
+            <element signature="e#11654#11759#0" expanded="false" />
+            <element signature="e#11878#12226#0" expanded="false" />
+            <element signature="e#12283#13025#0" expanded="false" />
+            <element signature="e#13085#13703#0" expanded="false" />
+            <element signature="e#13755#13840#0" expanded="false" />
+            <element signature="e#14027#15110#0" expanded="false" />
+            <element signature="e#15175#16493#0" expanded="false" />
+            <element signature="e#16588#16891#0" expanded="false" />
+            <element signature="e#16946#17276#0" expanded="false" />
+            <element signature="e#17343#17484#0" expanded="false" />
+            <element signature="e#17532#17718#0" expanded="false" />
+            <element signature="e#17828#18062#0" expanded="false" />
+            <element signature="e#18117#18381#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -609,6 +641,8 @@
           <caret line="123" column="0" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#1470#1741#0" expanded="false" />
+            <element signature="e#1799#2118#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -651,41 +685,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Source/FileManager.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="448" column="32" selection-start-line="448" selection-start-column="32" selection-end-line="448" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#9#0" expanded="false" />
-            <element signature="e#88#2597#0" expanded="false" />
-            <element signature="e#828#2085#0" expanded="false" />
-            <element signature="e#2153#2431#0" expanded="false" />
-            <element signature="e#2486#2597#0" expanded="false" />
-            <element signature="e#3350#3390#0" expanded="false" />
-            <element signature="e#3529#3975#0" expanded="false" />
-            <element signature="e#4045#4892#0" expanded="false" />
-            <element signature="e#4965#5633#0" expanded="false" />
-            <element signature="e#5695#5820#0" expanded="false" />
-            <element signature="e#5976#6711#0" expanded="false" />
-            <element signature="e#6795#7987#0" expanded="false" />
-            <element signature="e#8074#9096#0" expanded="false" />
-            <element signature="e#9172#9331#0" expanded="false" />
-            <element signature="e#9460#9908#0" expanded="false" />
-            <element signature="e#9975#10835#0" expanded="false" />
-            <element signature="e#10905#11589#0" expanded="false" />
-            <element signature="e#11646#11751#0" expanded="false" />
-            <element signature="e#11870#12218#0" expanded="false" />
-            <element signature="e#12275#13017#0" expanded="false" />
-            <element signature="e#13077#13695#0" expanded="false" />
-            <element signature="e#13747#13832#0" expanded="false" />
-            <element signature="e#14019#15102#0" expanded="false" />
-            <element signature="e#17524#17710#0" expanded="false" />
-            <element signature="e#17820#18054#0" expanded="false" />
-            <element signature="e#18109#18373#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46303502">
@@ -715,14 +714,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/redditors.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Source/MessageManager.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -733,20 +724,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/RedditBot.py">
+    <entry file="file://$PROJECT_DIR$/Source/Redditor.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="26" selection-start-line="14" selection-start-column="26" selection-end-line="14" selection-end-column="26" />
+        <state vertical-scroll-proportion="6.5314183">
+          <caret line="238" column="39" selection-start-line="238" selection-start-column="39" selection-end-line="238" selection-end-column="39" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#1470#1741#0" expanded="false" />
+            <element signature="e#1799#2118#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Source/Redditor.py">
+    <entry file="file://$PROJECT_DIR$/Source/FileManager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2569317">
-          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="200" column="50" selection-start-line="200" selection-start-column="50" selection-end-line="200" selection-end-column="50" />
+          <folding>
+            <element signature="e#88#2597#0" expanded="false" />
+            <element signature="e#828#2085#0" expanded="false" />
+            <element signature="e#2153#2431#0" expanded="false" />
+            <element signature="e#2486#2597#0" expanded="false" />
+            <element signature="e#3350#3390#0" expanded="false" />
+            <element signature="e#3529#3975#0" expanded="false" />
+            <element signature="e#4045#4892#0" expanded="false" />
+            <element signature="e#4965#5633#0" expanded="false" />
+            <element signature="e#5695#5820#0" expanded="false" />
+            <element signature="e#8082#9104#0" expanded="false" />
+            <element signature="e#9180#9339#0" expanded="false" />
+            <element signature="e#9468#9916#0" expanded="false" />
+            <element signature="e#9983#10843#0" expanded="false" />
+            <element signature="e#10913#11597#0" expanded="false" />
+            <element signature="e#11654#11759#0" expanded="false" />
+            <element signature="e#11878#12226#0" expanded="false" />
+            <element signature="e#12283#13025#0" expanded="false" />
+            <element signature="e#13085#13703#0" expanded="false" />
+            <element signature="e#13755#13840#0" expanded="false" />
+            <element signature="e#14027#15110#0" expanded="false" />
+            <element signature="e#15175#16493#0" expanded="false" />
+            <element signature="e#16588#16891#0" expanded="false" />
+            <element signature="e#16946#17276#0" expanded="false" />
+            <element signature="e#17343#17484#0" expanded="false" />
+            <element signature="e#17532#17718#0" expanded="false" />
+            <element signature="e#17828#18062#0" expanded="false" />
+            <element signature="e#18117#18381#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/redditors.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="8" selection-start-line="3" selection-start-column="8" selection-end-line="3" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RedditBot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8798521">
+          <caret line="67" column="66" selection-start-line="67" selection-start-column="66" selection-end-line="67" selection-end-column="66" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

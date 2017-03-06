@@ -190,15 +190,23 @@ class AccountManager:
 
         self.subreddit_list = []
         for subreddit_name in self.xml_manager.get_subreddits(self.name):
-            self.subreddit_list.append(Subreddit(subreddit_name))
+            # Create subreddit object and add all keywords for that subreddit
+            subreddit_object = Subreddit(subreddit_name)
+            subreddit_object.keyword_list = self.xml_manager.get_subreddit_keywords(self.name, subreddit_name)
+
+            # Add subreddit object to list of subreddit objects
+            self.subreddit_list.append(subreddit_object)
 
         self.keyword_list = self.xml_manager.get_global_keywords(self.name)
         self.subscribed = self.xml_manager.get_subscribed(self.name)
 
         print self.name
-        print self.subreddit_list
         print self.keyword_list
         print self.subscribed
+        print "Subreddits: "
+        for item in self.subreddit_list:
+            print item.name, item.keyword_list
+        print ""
 
     # Save list of IDs, subreddits, and keywords appropriately
     def save_version_0_1(self):

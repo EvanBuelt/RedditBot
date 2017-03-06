@@ -191,7 +191,7 @@ class XmlManager:
         # Find subreddit specified
         for child in subreddits_object:
             if child.attrib[self.name_string] == subreddit:
-                subreddit_object = child
+                subreddit_keyword_object = child
 
         if subreddit_keyword_object is not None:
             # Get all keywords for particular subreddit

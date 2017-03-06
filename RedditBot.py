@@ -60,19 +60,21 @@ class Bot:
 
                             self.process_message(item)
                     self.save()
+            except Exception as instance:
+                print "Exception handled in checking inbox: ", type(instance), instance
+                time.sleep(10)
 
+            try:
                 if (current_time[hours_index] != previous_hours) and (current_time[hours_index] % 8 == 0):
                     previous_hours = current_time[hours_index]
                     # Get posts and send if updated
                     for account in self.redditter_object_list:
                         account.process_posts(self.reddit, 100)
                     print "Posts processed"
-
-                time.sleep(5)
-
             except Exception as instance:
-                print "Exception handled: ", type(instance), instance
+                print "Exception handled in sending: ", type(instance), instance
                 time.sleep(10)
+            time.sleep(5)
 
     def process_message(self, message):
         # Get sender of message
