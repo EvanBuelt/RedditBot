@@ -3,6 +3,7 @@ import praw
 import Source.Redditor
 import Source.FileManager
 import Source.MessageManager
+import prawcore.exceptions as PExceptions
 
 
 class Bot:
@@ -50,8 +51,24 @@ class Bot:
                     # Update previous minutes to current minutes
                     previous_minutes = current_time[minutes_index]
 
-                    # Get messages and process them
-                    messages = self.reddit.inbox.all(limit=25)
+                    messages = []
+                    received = False
+                    wait_times = [1, 2, 4, 8, 16, 32]
+                    index = 0
+
+                    while not received:
+                        try:
+                            # Get messages and process them
+                            messages = self.reddit.inbox.all(limit=25)
+                            received = True
+                        except PExceptions.RequestException:
+                            print "Request Exception handled in getting inbox"
+                            if index >= len(wait_times):
+                                break
+                            sleep_time = wait_times[index]
+                            time.sleep(sleep_time)
+                            index += 1
+
                     for item in messages:
                         if item.id not in self.message_id_list:
                             print "New Message received"
