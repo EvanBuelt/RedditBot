@@ -143,14 +143,19 @@ class AccountManager:
                     if submission.id not in self.post_list:
                         self.post_list.append(submission.id)
 
-                        combined_keywords = [keyword for keyword in self.keyword_list]
+                        combined_keywords = []
+
+                        for keyword in self.keyword_list:
+                            if keyword.lower() not in combined_keywords:
+                                combined_keywords.append(keyword.lower())
+
                         for keyword in subreddit_object.keyword_list:
-                            if keyword not in combined_keywords:
-                                combined_keywords.append(keyword)
+                            if keyword.lower() not in combined_keywords:
+                                combined_keywords.append(keyword.lower())
 
                         # Iterate over all keywords to see if they are found in the title
                         for keyword in combined_keywords:
-                            if keyword in submission.title:
+                            if keyword.lower() in submission.title.lower():
                                 message = message + str(i) + ". [" + submission.title + "](" + submission.permalink + ").  "
                                 i += 1
                                 break
@@ -158,6 +163,8 @@ class AccountManager:
                 # If there was something found, send a message to the redditor
                 if message is not "":
                     self.message(title, message)
+                    print "Sent message to " + self.name
+
             except PExceptions.RequestException:
                 print "Request Exception handled in getting subreddit"
                 if index >= len(wait_times):

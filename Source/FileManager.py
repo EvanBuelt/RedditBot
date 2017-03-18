@@ -508,4 +508,9 @@ def load_id_list(folder_name):
         with open(folder_name, "r") as f:
             redditors = f.read()
             redditors = redditors.split("\n")
-            return list(filter(None, redditors))
+            redditors = list(filter(None, redditors))
+            return_list = []
+            for id in redditors:
+                if '\x00' not in id:
+                    return_list.append(id)
+            return return_list

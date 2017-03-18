@@ -43,10 +43,9 @@ class Bot:
 
         # Start running
         while True:
+            # Get current time
+            current_time = time.localtime()
             try:
-                # Get current time
-                current_time = time.localtime()
-
                 if current_time[minutes_index] != previous_minutes:
                     # Update previous minutes to current minutes
                     previous_minutes = current_time[minutes_index]
@@ -64,7 +63,7 @@ class Bot:
                 time.sleep(10)
 
             try:
-                if (current_time[hours_index] != previous_hours) and (current_time[hours_index] % 8 == 0):
+                if (current_time[hours_index] != previous_hours) and (current_time[hours_index] % 4 == 0):
                     previous_hours = current_time[hours_index]
                     # Get posts and send if updated
                     for account in self.redditter_object_list:
@@ -132,7 +131,8 @@ class Bot:
         self.redditter_list = Source.FileManager.load_id_list(self.redditor_folder)
         self.message_id_list = Source.FileManager.load_id_list(self.message_folder)
 
-        print self.redditter_list
+        print "Redditer List: ", self.redditter_list
+        print "Message List: ", self.message_id_list
 
         for redditor in self.redditter_list:
             self.xml_manager.add_redditor(redditor)
