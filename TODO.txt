@@ -1,0 +1,12 @@
+-Subreddit Specific keywords
+-Multiple commands per message
+-Use comma Delimiting vs space delimiting
+-Improve exception handling
+-XML update
+-Refactor subreddit title parsing to match entire words
+-Add options for how/what to parse
+
+Bugs:
+-On startup, bot occasionally parses all messages
+-Bot doesn't always parse messages correctly
+-ID files sometimes have null characters in them

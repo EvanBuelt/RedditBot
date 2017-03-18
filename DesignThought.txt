@@ -1,0 +1,104 @@
+File Management:
+
+XmlLoader
+    Data:
+    -tree
+    -root
+
+    Functions
+    -get_root()
+
+    -get_version()
+    -set_version(major, minor)
+
+    -load()
+    -save()
+
+XmlParser_0_1
+    Data:
+    -root (to navigate data)
+
+    Functions:
+    -set_root(root)
+
+    -add_keyword(redditor, data)
+    -remove_keyword(redditor, data)
+    -get_keyword_list(redditor, data)
+
+    -add_subreddit(redditor, data)
+    -remove_subreddit(redditor, data)
+    -get_subreddit_list(redditor, data)
+
+    -add_time(redditor, data)
+    -remove_time(redditor, data)
+    -get_time_list(redditor, data)
+
+    -add_subreddit_keyword(redditor, data)
+    -remove_subreddit_keyword(redditor, data)
+    -get_subreddit_keyword(redditor, data)
+
+    -add_redditor(redditor, data)
+    -remove_redditor(redditor, data)
+    -get_redditor_list(redditor, data)
+
+    -get_redditor_version(redditor, data)
+    -set_redditor_version(redditor, data)
+
+-load_ID_list(folder, id_list)
+-save_ID_list(folder, id_list)
+
+Account Management:
+
+AccountManager
+    Data:
+    -name
+    -redditor_object
+    -subscribed
+
+    -xml_parser
+
+    -post_list
+    -subreddit_list
+    -keyword_list
+
+    Functions:
+    -add_subreddit
+    -remove_subreddit
+
+    -add_global_keyword
+    -remove_global_keyword
+
+    -add_subreddit_keyword
+    -remove_subreddit_keyword
+
+    -process_post
+    -send_posts
+
+    -message
+
+    -load_xml
+    -save_xml
+
+InboxManager
+    Data:
+    -command_menu
+
+    Function:
+    -process_message
+
+    -process_help
+
+    -process_get_subreddits
+    -process_add_subreddit
+    -process_remove_subreddit
+
+    -process_get_keyword
+    -process_add_keyword
+    -process_remove_keyword
+
+    -process_subscribe
+    -process_unsubscribe
+
+    -process_clear
+
+    -process_unknown
