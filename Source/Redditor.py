@@ -137,28 +137,31 @@ class AccountManager:
                 title = "New posts from " + subreddit_object.name
                 message = ""
                 sent = True
-                i = 1
+                link_num = 1
+
                 for submission in subreddit.new(limit=limit_per_subreddit):
-                    # Only look at ids not already found
-                    if submission.id not in self.post_list:
-                        self.post_list.append(submission.id)
+                    if link_num <= 15:
+                        # Only look at ids not already found
+                        if submission.id not in self.post_list:
+                            self.post_list.append(submission.id)
 
-                        combined_keywords = []
+                            combined_keywords = []
 
-                        for keyword in self.keyword_list:
-                            if keyword.lower() not in combined_keywords:
-                                combined_keywords.append(keyword.lower())
+                            for keyword in self.keyword_list:
+                                if keyword.lower() not in combined_keywords:
+                                    combined_keywords.append(keyword.lower())
 
-                        for keyword in subreddit_object.keyword_list:
-                            if keyword.lower() not in combined_keywords:
-                                combined_keywords.append(keyword.lower())
+                            for keyword in subreddit_object.keyword_list:
+                                if keyword.lower() not in combined_keywords:
+                                    combined_keywords.append(keyword.lower())
 
-                        # Iterate over all keywords to see if they are found in the title
-                        for keyword in combined_keywords:
-                            if keyword.lower() in submission.title.lower():
-                                message = message + str(i) + ". [" + submission.title + "](" + submission.permalink + ").  "
-                                i += 1
-                                break
+                            # Iterate over all keywords to see if they are found in the title
+                            for keyword in combined_keywords:
+                                if keyword.lower() in submission.title.lower():
+                                    message = message + str(link_num) + ". [" + submission.title + "](" + \
+                                              submission.permalink + ").  \n\n"
+                                    link_num += 1
+                                    break
 
                 # If there was something found, send a message to the redditor
                 if message is not "":

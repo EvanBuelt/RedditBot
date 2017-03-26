@@ -51,21 +51,6 @@ Command:
 '''
 
 
-class Command:
-    def __init__(self, instruction):
-
-        self.instruction = instruction
-        self.data = []
-
-    def get_instruction_string(self):
-        return self.instruction
-
-    def add_data(self, word):
-        self.data.append(word)
-
-    def get_data(self):
-        return self.data
-
 
 class MessageManager:
     def __init__(self):

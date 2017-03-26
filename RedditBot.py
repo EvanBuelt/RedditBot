@@ -47,19 +47,14 @@ class Bot:
             current_time = time.localtime()
             try:
                 if current_time[minutes_index] != previous_minutes:
+                    # Handles inbox messages sent to box
+                    self.handle_inbox()
+
                     # Update previous minutes to current minutes
                     previous_minutes = current_time[minutes_index]
 
-                    # Get list of messages from inbox
-                    messages = self.get_inbox_messages()
-
-                    # Process messages
-                    self.process_message(messages)
-
-                    # Save in case data updated
-                    self.save()
             except Exception as instance:
-                print "Exception handled in checking inbox: ", type(instance), instance
+                print "Exception handled in sending: ", type(instance), instance
                 time.sleep(10)
 
             try:
@@ -74,6 +69,16 @@ class Bot:
                 print "Exception handled in sending: ", type(instance), instance
                 time.sleep(10)
             time.sleep(5)
+
+    def handle_inbox(self):
+        # Get list of messages from inbox
+        messages = self.get_inbox_messages()
+
+        # Process messages
+        self.process_message(messages)
+
+        # Save in case data updated
+        self.save()
 
     def get_inbox_messages(self):
         messages = []
