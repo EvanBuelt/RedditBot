@@ -25,7 +25,7 @@ class Subreddit:
 
 
 class AccountManager:
-    def __init__(self, reddit, name, xml_manager):
+    def __init__(self, reddit, name, xml_manager, subscribed):
         # Set name of redditter associated with class
         self.name = name
 
@@ -33,7 +33,7 @@ class AccountManager:
         self.redditor = reddit.redditor(name)
 
         # Keep track of whether the user is subscribed
-        self.subscribed = False
+        self.subscribed = subscribed
 
         # Get folder name of posts previously sent to particular redditter
         self.id_folder_name = "data/" + name + "_id.txt"
@@ -159,7 +159,7 @@ class AccountManager:
                             for keyword in combined_keywords:
                                 if keyword.lower() in submission.title.lower():
                                     message = message + str(link_num) + ". [" + submission.title + "](" + \
-                                              submission.permalink + ").  \n\n"
+                                              submission.permalink + ")  \n\n"
                                     link_num += 1
                                     break
 

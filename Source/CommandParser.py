@@ -1,6 +1,9 @@
 __author__ = 'Evan'
 
 
+class ParserException(Exception):
+    def __init__(self, message):
+        self.message = message
 class Data:
     commands = ["Subscribe",
                 "Unsubscribe",
@@ -37,6 +40,7 @@ class Token:
     OPTION     = 2
     WORD       = 3
     WORD_COMMA = 4
+
     def __init__(self, identifier, data):
         self.identifier = identifier
         self.data = data
@@ -108,89 +112,85 @@ class Lexer:
 
 class Parser:
 
-    # Codes for handling issues
-    NO_COMMAND = 0
-    INVALID_COMMAND = 1
-    NO_COMMAND_DATA = 2
-    NO_OPTION_DATA = 3
-
     def __init__(self):
         # Create list of commands and options based on data
         self.valid_commands = list(Data.commands)
         self.valid_options = list(Data.options)
 
     def token_to_command(self, tokens):
-        command = None
+        # Determine if message starts with command
+        if len(tokens) > 0:
+            if tokens[0].identifier != Token.COMMAND:
+                raise ParserException("No Command")
 
-        # Get combined instruction
-        instruction = ""
-        for i in range(0, len(tokens)):
-            token = tokens[i]
-            if token.identifier == Token.COMMAND:
-                # Create multi-word instruction
-                if i == 0 or i == 1:
-                    instruction = instruction + token.data
-                else:
-                    token.identifier = Token.WORD
-            if i == 0:
-                if token[0] == Token.COMMAND:
-                    instruction = token[1]
-        return
+        longest_command_length = self.get_longest_command_length()
 
-    def condense_tokens(self, tokens):
+        # Determine if message contains enough data
+        if longest_command_length >= len(tokens):
+            raise ParserException("No Data")
+
+        print longest_command_length
+        
+        # Determine if message is valid
+        if not self.is_valid_command(tokens):
+            raise ParserException("Invalid Command")
+
+        # Update non-command words identified as commands to words
+        for i in range(longest_command_length, len(tokens)):
+            if tokens[i].identifier == Token.COMMAND:
+                tokens[i].identifier = Token.WORD
+
+        # Condense command tokens into a single command token
         command_token = Token(Token.COMMAND, "")
-        command_data = Token(Token.WORD, "")
-        options_list = []
 
-        step = Token.COMMAND
+        for token in tokens[0:longest_command_length]:
+            command_token.data = command_token.data + " " + token.data
 
-        # Condense commands
-        for token in tokens:
-            # Previous token was command or starting at beginning of token list
-            if step == Token.COMMAND:
-                if token.identifier == Token.COMMAND:
-                    command_token.data = (command_token.data + " " + token.data).lstrip(" ")
-                elif token.identifier in (Token.WORD, Token.WORD_COMMA):
-                    command_data.data = (command_data.data + " " + token.data).lstrip(" ")
-                    step = Token.WORD
-                else:
-                    raise Exception("Invalid Structure")
-            elif step == Token.WORD:
-                if token.identifier in (Token.COMMAND, Token.WORD, Token.WORD_COMMA):
-                    return
-    # Determines if message is valid
-    def is_valid(self, tokens):
+        command_token.data = command_token.data.lstrip(' ')
+        tokens = [command_token] + tokens[longest_command_length:]
+        
+        # Split tokens into groups delimited by commands and options
+
+        # For each group, determine if comma separated.  If comma separated, combine words between commas
+
+        # Convert groups into command class
+
+    def get_longest_command_length(self):
+        # Set longest length to 0 initially
+        longest_command_length = 0
+
+        # Iterate over all valid commands to find longest one
+        for valid_command in self.valid_commands:
+
+            # Split command into words and get length
+            command_words = valid_command.split(' ')
+            command_length = len(command_words)
+
+            # Update longest command length if current command is longer
+            if command_length > longest_command_length:
+                longest_command_length = command_length
+
+        return longest_command_length
+
+    def is_valid_command(self, tokens):
+        # Setup data for checking for valid command
+        is_valid_command = False
+        longest_command_length = self.get_longest_command_length()
         command = ""
-        command_found = False
-        for i in range(0, tokens):
-            token = tokens[i]
 
-            # Checks
-            if not command_found and i < 2:
-                command = command + " " + token.data
-                command.lstrip(" ")
-                if self.is_command(command):
-                    command_found = True
+        # Get command from tokens
+        for i in range(0, longest_command_length):
+            command = command + " " + tokens[i].data
 
-    def is_command(self, data):
-        for command in self.valid_commands:
-            if data.lower() == command.lower():
-                return True
+        # Strip leading space
+        command = command.lstrip(' ')
+        
+        # Check each command
+        for valid_command in self.valid_commands:
+            if command.lower() == valid_command.lower():
+                is_valid_command = True
 
-        return False
+        return is_valid_command
 
-    # Used to determine whether to combine words or not
-    def is_comma_separated(self, tokens):
-        for token in tokens:
-            if token.identifier == Token.WORD_COMMA:
-                return True
-        return False
-
-    # Used to find continuous spans of data
-    def find_non_word_indexes(self, tokens):
+    def split_tokens_into_groups(self, tokens):
         indexes = []
-        for i in range(0, tokens):
-            token = tokens[i]
-            if (token.identifier != Token.WORD) or (token.identifier != Token.WORD_COMMA):
-                indexes.append(i)
-        return indexes

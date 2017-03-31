@@ -54,7 +54,7 @@ class Bot:
                     previous_minutes = current_time[minutes_index]
 
             except Exception as instance:
-                print "Exception handled in sending: ", type(instance), instance
+                print "Exception in handling inbox: ", type(instance), instance
                 time.sleep(10)
 
             try:
@@ -66,11 +66,12 @@ class Bot:
                     print "Posts processed"
 
             except Exception as instance:
-                print "Exception handled in sending: ", type(instance), instance
+                print "Exception in sending messages: ", type(instance), instance
                 time.sleep(10)
             time.sleep(5)
 
     def handle_inbox(self):
+
         # Get list of messages from inbox
         messages = self.get_inbox_messages()
 
@@ -122,7 +123,7 @@ class Bot:
                     redditter = redditer_object
         else:
             self.redditter_list.append(name)
-            redditter_object = Source.Redditor.AccountManager(self.reddit, name, True)
+            redditter_object = Source.Redditor.AccountManager(self.reddit, name, self.xml_manager, True)
             redditter = redditter_object
             self.redditter_object_list.append(redditter_object)
 
@@ -136,12 +137,15 @@ class Bot:
         self.redditter_list = Source.FileManager.load_id_list(self.redditor_folder)
         self.message_id_list = Source.FileManager.load_id_list(self.message_folder)
 
+        for redditor in self.redditter_list:
+            redditor_object = Source.Redditor.AccountManager(self.reddit, redditor, self.xml_manager, False)
+            self.xml_manager.add_redditor(redditor)
+            self.redditter_object_list.append(redditor_object)
+
         print "Redditer List: ", self.redditter_list
         print "Message List: ", self.message_id_list
+        print "Redditor Object List: ", self.redditter_object_list
 
-        for redditor in self.redditter_list:
-            self.xml_manager.add_redditor(redditor)
-            self.redditter_object_list.append(Source.Redditor.AccountManager(self.reddit, redditor, self.xml_manager))
         return
 
     def save(self):
