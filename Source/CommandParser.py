@@ -5,7 +5,8 @@ class ParserException(Exception):
     def __init__(self, message):
         self.message = message
 class Data:
-    commands = ["Subscribe",
+    commands = ["Help",
+                "Subscribe",
                 "Unsubscribe",
                 "Clear",
                 "Add Subreddit",
@@ -118,42 +119,40 @@ class Parser:
         self.valid_options = list(Data.options)
 
     def token_to_command(self, tokens):
-        # Determine if message starts with command
-        if len(tokens) > 0:
-            if tokens[0].identifier != Token.COMMAND:
-                raise ParserException("No Command")
-
-        longest_command_length = self.get_longest_command_length()
-
-        # Determine if message contains enough data
-        if longest_command_length >= len(tokens):
+        # Ensure there's data to be parsed
+        if len(tokens) == 0:
             raise ParserException("No Data")
 
-        print longest_command_length
+        # Determine if message starts with command
+        self.check_for_command(tokens)
         
         # Determine if message is valid
-        if not self.is_valid_command(tokens):
-            raise ParserException("Invalid Command")
+        command = self.get_command(tokens)
+        command_length = len(command.split(' '))
 
         # Update non-command words identified as commands to words
-        for i in range(longest_command_length, len(tokens)):
+        for i in range(command_length, len(tokens)):
             if tokens[i].identifier == Token.COMMAND:
                 tokens[i].identifier = Token.WORD
 
         # Condense command tokens into a single command token
         command_token = Token(Token.COMMAND, "")
 
-        for token in tokens[0:longest_command_length]:
+        for token in tokens[0:command_length]:
             command_token.data = command_token.data + " " + token.data
 
         command_token.data = command_token.data.lstrip(' ')
-        tokens = [command_token] + tokens[longest_command_length:]
-        
+        tokens = [command_token] + tokens[command_length:]
+
         # Split tokens into groups delimited by commands and options
 
         # For each group, determine if comma separated.  If comma separated, combine words between commas
 
         # Convert groups into command class
+
+    def check_for_command(self, tokens):
+        if tokens[0].identifier != Token.COMMAND:
+            raise ParserException("No Command")
 
     def get_longest_command_length(self):
         # Set longest length to 0 initially
@@ -172,18 +171,30 @@ class Parser:
 
         return longest_command_length
 
-    def is_valid_command(self, tokens):
-        # Setup data for checking for valid command
-        is_valid_command = False
+    def get_command(self, tokens):
+
         longest_command_length = self.get_longest_command_length()
         command = ""
+        valid_command = False
 
-        # Get command from tokens
         for i in range(0, longest_command_length):
-            command = command + " " + tokens[i].data
+            token = tokens[i]
+            if token.identifier == Token.COMMAND:
+                command = command + " " + tokens[i].data
+                command = command.lstrip(' ')
+                valid_command = self.is_valid_command(command)
+                if valid_command:
+                    break
+            else:
+                break
 
-        # Strip leading space
-        command = command.lstrip(' ')
+        if not valid_command:
+            raise ParserException("Invalid Command")
+
+        return command
+
+    def is_valid_command(self, command):
+        is_valid_command = False
         
         # Check each command
         for valid_command in self.valid_commands:
@@ -194,3 +205,11 @@ class Parser:
 
     def split_tokens_into_groups(self, tokens):
         indexes = []
+
+        # List of tokens split into group
+        group = []
+
+        # Current group of instructions or
+        current_group = []
+        current_token = None
+        current_token_list = []
