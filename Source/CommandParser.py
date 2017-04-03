@@ -4,6 +4,8 @@ __author__ = 'Evan'
 class ParserException(Exception):
     def __init__(self, message):
         self.message = message
+
+
 class Data:
     commands = ["Help",
                 "Subscribe",
@@ -124,10 +126,10 @@ class Parser:
             raise ParserException("No Data")
 
         # Determine if message starts with command
-        self.check_for_command(tokens)
+        self._check_for_command(tokens)
         
         # Determine if message is valid
-        command = self.get_command(tokens)
+        command = self._get_command(tokens)
         command_length = len(command.split(' '))
 
         # Update non-command words identified as commands to words
@@ -145,16 +147,21 @@ class Parser:
         tokens = [command_token] + tokens[command_length:]
 
         # Split tokens into groups delimited by commands and options
+        groups = self._split_tokens_into_groups(tokens)
 
         # For each group, determine if comma separated.  If comma separated, combine words between commas
+        groups = self._filter_groups(groups)
 
         # Convert groups into command class
+        command = self._create_command_object(groups)
 
-    def check_for_command(self, tokens):
+        return command
+
+    def _check_for_command(self, tokens):
         if tokens[0].identifier != Token.COMMAND:
             raise ParserException("No Command")
 
-    def get_longest_command_length(self):
+    def _get_longest_command_length(self):
         # Set longest length to 0 initially
         longest_command_length = 0
 
@@ -171,9 +178,9 @@ class Parser:
 
         return longest_command_length
 
-    def get_command(self, tokens):
+    def _get_command(self, tokens):
 
-        longest_command_length = self.get_longest_command_length()
+        longest_command_length = self._get_longest_command_length()
         command = ""
         valid_command = False
 
@@ -182,7 +189,7 @@ class Parser:
             if token.identifier == Token.COMMAND:
                 command = command + " " + tokens[i].data
                 command = command.lstrip(' ')
-                valid_command = self.is_valid_command(command)
+                valid_command = self._is_valid_command(command)
                 if valid_command:
                     break
             else:
@@ -193,9 +200,9 @@ class Parser:
 
         return command
 
-    def is_valid_command(self, command):
+    def _is_valid_command(self, command):
         is_valid_command = False
-        
+
         # Check each command
         for valid_command in self.valid_commands:
             if command.lower() == valid_command.lower():
@@ -203,7 +210,7 @@ class Parser:
 
         return is_valid_command
 
-    def split_tokens_into_groups(self, tokens):
+    def _split_tokens_into_groups(self, tokens):
         indexes = []
 
         # List of tokens split into group
@@ -211,5 +218,88 @@ class Parser:
 
         # Current group of instructions or
         current_group = []
-        current_token = None
-        current_token_list = []
+
+        # Variable used for first group
+        first = True
+
+        for token in tokens:
+            if token.identifier in [Token.COMMAND, Token.OPTION]:
+                if not first:
+                    group.append(current_group)
+                else:
+                    first = False
+                current_group = list()
+                current_group.append(token)
+            elif token.identifier in [Token.WORD, Token.WORD_COMMA]:
+                current_group.append(token)
+
+        # Add last group (as there's no way to know in for loop)
+        group.append(current_group)
+
+        return group
+
+    def _filter_groups(self, groups):
+        new_groups = []
+        for group in groups:
+            has_commas = False
+            new_group = []
+
+            for token in group:
+                if token.identifier == Token.WORD_COMMA:
+                    has_commas = True
+
+            if has_commas:
+                condensed_token = Token(Token.WORD, "")
+                token = Token(Token.WORD, "")
+
+                # May want to use index to know when last word is reached
+                for i in range(0, len(group)):
+                    token = group[i]
+                    if token.identifier in [Token.COMMAND, Token.OPTION]:
+                        new_group.append(token)
+                    elif token.identifier == Token.WORD:
+                        condensed_token.data = condensed_token.data + " " + token.data
+                    elif token.identifier == Token.WORD_COMMA:
+                        condensed_token.data = condensed_token.data + " " + token.data
+                        condensed_token.data = condensed_token.data.lstrip(' ')
+                        condensed_token.data = condensed_token.data.rstrip(',')
+                        new_group.append(condensed_token)
+                        condensed_token = Token(Token.WORD, "")
+
+                # Cleanup if last word in group has a comma
+                if token.identifier == Token.WORD:
+                    condensed_token.data = condensed_token.data.lstrip(' ')
+                    condensed_token.data = condensed_token.data.rstrip(',')
+                    new_group.append(condensed_token)
+
+            else:
+                new_group = group
+
+            new_groups.append(new_group)
+
+        return new_groups
+
+    def _create_command_object(self, groups):
+        command = Command("", [], [])
+        group_type = Token.COMMAND
+        option_data = []
+        option = ""
+        for group in groups:
+            for token in group:
+                if token.identifier == Token.COMMAND:
+                    group_type = Token.COMMAND
+                    command.command = token.data
+                elif token.identifier == Token.OPTION:
+                    group_type = Token.OPTION
+                    option = token.data
+                    option_data = []
+                elif token.identifier in [Token.WORD, Token.WORD_COMMA]:
+                    if group_type == Token.COMMAND:
+                        command.data.append(token.data)
+                    elif group_type == Token.OPTION:
+                        option_data.append(token.data)
+
+            if group_type == Token.OPTION:
+                command.options.append([option, option_data])
+
+        return command
