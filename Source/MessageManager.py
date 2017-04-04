@@ -1,5 +1,6 @@
 import time
 import prawcore.exceptions as PExceptions
+import Source.CommandParser as Parser
 __author__ = 'Evan'
 
 
@@ -51,111 +52,69 @@ Command:
 '''
 
 
-
 class MessageManager:
     def __init__(self):
         # Commands used for help
-        self.command_menu = [("Subscribe", "Subscribes to the bot.  If you had a list of keywords and subreddits, these will be retained"),
-                             ("Unsubscribe", "Unsubscribes from the bot.  This will keep your list of keywords and subreddits"),
-                             ("Clear", "Clears list of subreddits and keywords"),
-                             ("Add Subreddit", "Adds a single subreddit this bot will check."),
-                             ("Remove Subreddit", "Removes a single subreddit from your list of subreddits this bot checks."),
-                             ("Get Subreddit", "Gets list of subreddits.  Same as 'Get Subreddits' command"),
-                             ("Add Subreddits", "Adds multiple subreddits this bot will check."),
-                             ("Remove Subreddits", "Removes multiple subreddits from your list of subreddits this bot checks."),
-                             ("Get Subreddits", "Gets list of subreddits.  Same as 'Get Subreddit' command"),
-                             ("Add Keyword", "Adds a single keyword to check in the list of subreddits."),
-                             ("Remove Keyword", "Removes a single keyword from your list of keywords."),
-                             ("Get Keyword", "Gets list of keywords.  Same as 'Get Keywords' command"),
-                             ("Add Keywords", "Adds multiple keywords to check in the list of subreddits."),
-                             ("Remove Keywords", "Removes multiple keywords from your list of keywords."),
-                             ("Get Keywords", "Gets list of keywords.  Same as 'Get Keyword' command")]
+        self.command_menu = [("Help", "You're using this command dumbass."),
+                             ("Subscribe", "Subscribes to the bot."),
+                             ("Unsubscribe", "Unsubscribes from the bot.  Any data will be kept for future use."),
+                             ("Clear", "Clears data associated with your account."),
+                             ("Add Subreddit", "Adds a list of subreddits to check."),
+                             ("Remove Subreddit", "Removes a list of subreddit to check."),
+                             ("Get Subreddit", "Gets list of subreddits this bot checks."),
+                             ("Add Subreddits", "Adds a list of subreddits to check."),
+                             ("Remove Subreddits", "Removes a list of subreddit to check."),
+                             ("Get Subreddits", "Gets list of subreddits this bot checks."),
+                             ("Add Keyword", "Adds a list of keyword to check."),
+                             ("Remove Keyword", "Removes a list of keyword to check."),
+                             ("Get Keyword", "Gets list of keywords."),
+                             ("Add Keywords", "Adds a list of keyword to check."),
+                             ("Remove Keywords", "Removes a list of keyword to check."),
+                             ("Get Keywords", "Gets list of keywords."),
+                             ("Add Time", "Adds a list of times to check."),
+                             ("Remove Time", "Removes a list of times to check."),
+                             ("Get Time", "Gets a list of times this bot check."),
+                             ("Add Times", "Adds a list of times to check."),
+                             ("Remove Times", "Removes a list of times to check."),
+                             ("Get Times", "Gets a list of times this bot check.")]
+
+        self.lexer = Parser.Lexer()
+        self.parser = Parser.Parser()
 
         return
 
     def process_message(self, message, redditter_object):
 
-        # Get body of message and split into words
-        text = message.body
-        words = text.split(' ')
+        # Get command from body of message
+        tokens = self.lexer.get_tokens(message.body)
+        command = self.parser.token_to_command(tokens)
 
-        reply = ""
+        # Get command and initialize reply
+        commandName = command.command.lower()
 
         # There are a few one word instructions, so process these
-        if len(words) == 1:
-            instruction = words[0]
-
-            if instruction.lower() == "help":
-                reply = self.process_help(message, redditter_object, None)
-            elif instruction.lower() == "unsubscribe":
-                reply = self.process_subscribe(message, redditter_object)
-            elif instruction.lower() == "subscribe":
-                reply = self.process_unsubscribe(message, redditter_object)
-            elif instruction.lower() == "clear":
-                reply = self.process_clear(message, redditter_object)
-            else:
-                reply = self.process_unknown(message, redditter_object)
-
-        # These are two word instructions.
-        elif len(words) >= 2:
-            instruction = words[0]
-
-            if instruction.lower() == "help":
-                command = words[1]
-                if len(words) >= 3:
-                    command = command + " " + words[2]
-
-                reply = self.process_help(message, redditter_object, command)
-            elif instruction.lower() == "get":
-                second_instruction = words[1]
-
-                if second_instruction.lower() == "subreddit":
-                    reply = self.process_get_subreddits(message, redditter_object)
-                elif second_instruction.lower() == "subreddits":
-                    reply = self.process_get_subreddits(message, redditter_object)
-                elif second_instruction.lower() == "keyword":
-                    reply = self.process_get_keyword(message, redditter_object)
-                elif second_instruction.lower() == "keywords":
-                    reply = self.process_get_keyword(message, redditter_object)
-                else:
-                    reply = self.process_unknown(message, redditter_object)
-
-            elif instruction.lower() == "add":
-                print "First instruction is add"
-                # If the instruction is add, then the next instruction is either subreddit or keyword
-                if len(words) >= 3:
-                    second_instruction = words[1]
-
-                    if second_instruction.lower() == "subreddit":
-                        reply = self.process_add_subreddit(message, redditter_object)
-                    elif second_instruction.lower() == "subreddits":
-                        reply = self.process_add_subreddit(message, redditter_object)
-                    elif second_instruction.lower() == "keyword":
-                        reply = self.process_add_keyword(message, redditter_object)
-                    elif second_instruction.ower() == "keywords":
-                        reply = self.process_add_keyword(message, redditter_object)
-                    else:
-                        reply = self.process_unknown(message, redditter_object)
-
-            elif instruction.lower() == "remove":
-                print "First instruction is remove"
-                # If the instruction is add, then the next instruction is either subreddit or keyword
-                if len(words) >= 3:
-                    second_instruction = words[1]
-
-                    if second_instruction.lower() == "subreddit":
-                        reply = self.process_remove_subreddit(message, redditter_object)
-                    elif second_instruction.lower() == "subreddits":
-                        reply = self.process_remove_subreddit(message, redditter_object)
-                    elif second_instruction.lower() == "keyword":
-                        reply = self.process_remove_keyword(message, redditter_object)
-                    elif second_instruction.ower() == "keywords":
-                        reply = self.process_remove_keyword(message, redditter_object)
-                    else:
-                        reply = self.process_unknown(message, redditter_object)
-            else:
-                reply = self.process_unknown(message, redditter_object)
-
+        if commandName in ["help"]:
+            reply = self.process_help(message, redditter_object, None)
+        elif commandName in ["subscribe"]:
+            reply = self.process_subscribe(message, redditter_object)
+        elif commandName in ["unsubscribe"]:
+            reply = self.process_unsubscribe(message, redditter_object)
+        elif commandName in ["clear"]:
+            reply = self.process_clear(message, redditter_object)
+        elif commandName in ["add keyword", "add keywords"]:
+            reply = self.process_add_keyword(message, redditter_object)
+        elif commandName in ["remove keyword", "remove keywords"]:
+            reply = self.process_remove_keyword(message, redditter_object)
+        elif commandName in ["get keyword", "get keywords"]:
+            reply = self.process_get_keyword(message, redditter_object)
+        elif commandName in ["add subreddit", "add subreddits"]:
+            reply = self.process_add_subreddit(message, redditter_object)
+        elif commandName in ["remove subreddit", "remove subreddits"]:
+            reply = self.process_remove_subreddit(message, redditter_object)
+        elif commandName in ["get subreddit", "get subreddits"]:
+            reply = self.process_get_subreddit(message, redditter_object)
+        else:
+            reply = self.process_unknown(message, redditter_object)
         sent = False
         wait_times = [1, 2, 4, 8, 16, 32]
         index = 0
@@ -193,7 +152,7 @@ class MessageManager:
 
         return reply_message
 
-    def process_get_subreddits(self, message, redditter_object):
+    def process_get_subreddit(self, message, redditter_object):
         print "Getting subreddits"
         # Get body of message and split into words
 
