@@ -52,31 +52,52 @@ Command:
 '''
 
 
+class MessageCommand:
+    def __init__(self, command, description, callback):
+        self.command = command
+        self.description = description
+        self.callback = callback
+
+
 class MessageManager:
     def __init__(self):
         # Commands used for help
-        self.command_menu = [("Help", "You're using this command dumbass."),
-                             ("Subscribe", "Subscribes to the bot."),
-                             ("Unsubscribe", "Unsubscribes from the bot.  Any data will be kept for future use."),
-                             ("Clear", "Clears data associated with your account."),
-                             ("Add Subreddit", "Adds a list of subreddits to check."),
-                             ("Remove Subreddit", "Removes a list of subreddit to check."),
-                             ("Get Subreddit", "Gets list of subreddits this bot checks."),
-                             ("Add Subreddits", "Adds a list of subreddits to check."),
-                             ("Remove Subreddits", "Removes a list of subreddit to check."),
-                             ("Get Subreddits", "Gets list of subreddits this bot checks."),
-                             ("Add Keyword", "Adds a list of keyword to check."),
-                             ("Remove Keyword", "Removes a list of keyword to check."),
-                             ("Get Keyword", "Gets list of keywords."),
-                             ("Add Keywords", "Adds a list of keyword to check."),
-                             ("Remove Keywords", "Removes a list of keyword to check."),
-                             ("Get Keywords", "Gets list of keywords."),
-                             ("Add Time", "Adds a list of times to check."),
-                             ("Remove Time", "Removes a list of times to check."),
-                             ("Get Time", "Gets a list of times this bot check."),
-                             ("Add Times", "Adds a list of times to check."),
-                             ("Remove Times", "Removes a list of times to check."),
-                             ("Get Times", "Gets a list of times this bot check.")]
+        self.command_menu = [MessageCommand("Help", "You're using this command dumbass.", self.process_help),
+                             MessageCommand("Subscribe", "Subscribes to the bot.", self.process_subscribe),
+                             MessageCommand("Unsubscribe", "Unsubscribes from the bot.  Any data will be kept for future use.", self.process_unsubscribe),
+                             MessageCommand("Clear", "Clears data associated with your account.", self.process_clear),
+                             MessageCommand("Add Subreddit", "Adds a list of subreddits to check.", self.process_add_subreddit),
+                             MessageCommand("Add Subreddits", "Adds a list of subreddits to check.", self.process_add_subreddit),
+                             MessageCommand("Get Subreddit", "Gets a list of subreddits to check.", self.process_get_subreddit),
+                             MessageCommand("Get Subreddits", "Gets a list of subreddits to check.", self.process_get_subreddit),
+                             MessageCommand("Remove Subreddit", "Adds a list of subreddits to check.", self.process_remove_subreddit),
+                             MessageCommand("Remove Subreddits", "Adds a list of subreddits to check.", self.process_remove_subreddit),
+                             MessageCommand("Add Keyword", "Adds a list of keywords to check.", self.process_add_keyword),
+                             MessageCommand("Add Keywords", "Adds a list of keywords to check.", self.process_add_keyword),
+                             MessageCommand("Get Keyword", "Gets a list of keywords to check.", self.process_get_keyword),
+                             MessageCommand("Get Keywords", "Gets a list of keywords to check.", self.process_get_keyword),
+                             MessageCommand("Remove Keyword", "Adds a list of keywords to check.", self.process_remove_keyword),
+                             MessageCommand("Remove Keywords", "Adds a list of keywords to check.", self.process_remove_keyword),
+                             MessageCommand("Add Times", "Adds a list of subreddits to check.", None),
+                             MessageCommand("Get Time", "Gets a list of subreddits to check.", None),
+                             MessageCommand("Get Times", "Gets a list of subreddits to check.", None),
+                             MessageCommand("Remove Time", "Adds a list of subreddits to check.", None),
+                             MessageCommand("Remove Times", "Adds a list of subreddits to check.", None)]
+
+        # Initialize parser data
+        Parser.Data.init()
+
+        # Use command menu above to add commands
+        for command in self.command_menu:
+            Parser.Data.add_command(command.command)
+
+        # Add options
+        Parser.Data.add_option("subreddit")
+        Parser.Data.add_option("subreddits")
+        Parser.Data.add_option("keyword")
+        Parser.Data.add_option("keywords")
+        Parser.Data.add_option("time")
+        Parser.Data.add_option("times")
 
         self.lexer = Parser.Lexer()
         self.parser = Parser.Parser()
@@ -91,30 +112,17 @@ class MessageManager:
 
         # Get command and initialize reply
         commandName = command.command.lower()
+        reply = None
 
         # There are a few one word instructions, so process these
-        if commandName in ["help"]:
-            reply = self.process_help(message, redditter_object, None)
-        elif commandName in ["subscribe"]:
-            reply = self.process_subscribe(message, redditter_object)
-        elif commandName in ["unsubscribe"]:
-            reply = self.process_unsubscribe(message, redditter_object)
-        elif commandName in ["clear"]:
-            reply = self.process_clear(message, redditter_object)
-        elif commandName in ["add keyword", "add keywords"]:
-            reply = self.process_add_keyword(message, redditter_object)
-        elif commandName in ["remove keyword", "remove keywords"]:
-            reply = self.process_remove_keyword(message, redditter_object)
-        elif commandName in ["get keyword", "get keywords"]:
-            reply = self.process_get_keyword(message, redditter_object)
-        elif commandName in ["add subreddit", "add subreddits"]:
-            reply = self.process_add_subreddit(message, redditter_object)
-        elif commandName in ["remove subreddit", "remove subreddits"]:
-            reply = self.process_remove_subreddit(message, redditter_object)
-        elif commandName in ["get subreddit", "get subreddits"]:
-            reply = self.process_get_subreddit(message, redditter_object)
-        else:
+        for menu in self.command_menu:
+            if commandName == menu.command.lower():
+                reply = menu.callback(message, redditter_object)
+                break
+
+        if reply is None:
             reply = self.process_unknown(message, redditter_object)
+
         sent = False
         wait_times = [1, 2, 4, 8, 16, 32]
         index = 0
@@ -130,25 +138,20 @@ class MessageManager:
                 time.sleep(sleep_time)
                 index += 1
 
-    def process_help(self, message, redditter_object, command):
+    def process_help(self, message, redditter_object):
         reply_message = ""
+        command = None
         if command is not None:
             for item in self.command_menu:
-                (menu, help_text) = item
-                if command.lower() == menu.lower():
-                    reply_message = command + ": " + help_text
+
+                if command.lower() == item.command.lower():
+                    reply_message = command + ": " + item.description
+
         if reply_message == "":
-            first = True
+            reply_message = "I am unable to process your command.  Here is a list of available commands: "
 
-            reply_message = "Here are the commands I accept: "
             for item in self.command_menu:
-                (menu, help_text) = item
-
-                if first:
-                    reply_message = reply_message + menu
-                    first = False
-                else:
-                    reply_message = reply_message + ", " + menu
+                reply_message = reply_message + "\n\n" + item.command
 
         return reply_message
 
@@ -251,16 +254,10 @@ class MessageManager:
     def process_unknown(self, message, redditter_object):
         print "Unknown command processed"
 
-        first = True
-
         reply_message = "I am unable to process your command.  Here is a list of available commands: "
-        for menu in self.command_menu:
-            (command, text) = menu
-            if first:
-                reply_message = reply_message + command + ", "
-                first = False
-            else:
-                reply_message = reply_message + ", " + command
+
+        for item in self.command_menu:
+            reply_message = reply_message + "\n\n-" + item.command
 
         return reply_message
 

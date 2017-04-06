@@ -7,35 +7,22 @@ class ParserException(Exception):
 
 
 class Data:
-    commands = ["Help",
-                "Subscribe",
-                "Unsubscribe",
-                "Clear",
-                "Add Subreddit",
-                "Remove Subreddit",
-                "Get Subreddit",
-                "Add Subreddits",
-                "Remove Subreddits",
-                "Get Subreddits",
-                "Add Keyword",
-                "Remove Keyword",
-                "Get Keyword",
-                "Add Keywords",
-                "Remove Keywords",
-                "Get Keywords",
-                "Add Time",
-                "Remove Time",
-                "Get Time",
-                "Add Times",
-                "Remove Times",
-                "Get Times"]
 
-    options = ["subreddit",
-               "subreddits",
-               "keyword",
-               "keywords",
-               "time",
-               "times"]
+    commands = []
+    options = []
+
+    @classmethod
+    def init(cls):
+        cls.commands = []
+        cls.options = []
+
+    @classmethod
+    def add_command(cls, command):
+        cls.commands.append(command)
+
+    @classmethod
+    def add_option(cls, option):
+        cls.options.append(option)
 
 
 class Token:
