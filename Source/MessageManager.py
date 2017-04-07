@@ -117,11 +117,11 @@ class MessageManager:
         # There are a few one word instructions, so process these
         for menu in self.command_menu:
             if commandName == menu.command.lower():
-                reply = menu.callback(message, redditter_object)
+                reply = menu.callback(command, redditter_object)
                 break
 
         if reply is None:
-            reply = self.process_unknown(message, redditter_object)
+            reply = self.process_unknown(command, redditter_object)
 
         sent = False
         wait_times = [1, 2, 4, 8, 16, 32]
@@ -138,14 +138,17 @@ class MessageManager:
                 time.sleep(sleep_time)
                 index += 1
 
-    def process_help(self, message, redditter_object):
+    def process_help(self, command, redditter_object):
         reply_message = ""
-        command = None
-        if command is not None:
-            for item in self.command_menu:
+        command_word = ""
+        for word in command.data:
+            command_word = command_word + " " + word
 
-                if command.lower() == item.command.lower():
-                    reply_message = command + ": " + item.description
+        command_word = command_word.lstrip(" ")
+        if command_word != "":
+            for item in self.command_menu:
+                if command_word.lower() == item.command.lower():
+                    reply_message = command_word + ": " + item.description
 
         if reply_message == "":
             reply_message = "I am unable to process your command.  Here is a list of available commands: "
@@ -155,7 +158,7 @@ class MessageManager:
 
         return reply_message
 
-    def process_get_subreddit(self, message, redditter_object):
+    def process_get_subreddit(self, command, redditter_object):
         print "Getting subreddits"
         # Get body of message and split into words
 
@@ -171,11 +174,10 @@ class MessageManager:
 
         return reply_message
 
-    def process_add_subreddit(self, message, redditter_object):
+    def process_add_subreddit(self, command, redditter_object):
         print "Adding subreddit"
         # Get body of message and split into words
-        text = message.body
-        words = text.split(' ')
+        words = command.data
 
         for i in range(2, len(words)):
             subreddit = words[i]
@@ -183,19 +185,17 @@ class MessageManager:
 
         return "Your requested subreddits have been added"
 
-    def process_remove_subreddit(self, message, redditter_object):
+    def process_remove_subreddit(self, command, redditter_object):
         print "Removing subreddit"
         # Get body of message and split into words
-        text = message.body
-        words = text.split(' ')
+        words = command.data
 
-        for i in range(2, len(words)):
-            subreddit = words[i]
+        for subreddit in words:
             redditter_object.remove_subreddit(subreddit)
 
         return "Your requested subreddits have been removed"
 
-    def process_get_keyword(self, message, redditter_object):
+    def process_get_keyword(self, command, redditter_object):
         print "Getting keyword"
         # Get body of message and split into words
 
@@ -211,47 +211,43 @@ class MessageManager:
 
         return reply_message
 
-    def process_add_keyword(self, message, redditter_object):
+    def process_add_keyword(self, command, redditter_object):
         print "Adding keyword"
         # Get body of message and split into words
-        text = message.body
-        words = text.split(' ')
+        words = command.data
 
-        for i in range(2, len(words)):
-            keyword = words[i]
+        for keyword in words:
             redditter_object.add_global_keyword(keyword)
 
         return "Your requested keywords have been added"
 
-    def process_remove_keyword(self, message, redditter_object):
+    def process_remove_keyword(self, command, redditter_object):
         print "Removing keyword"
         # Get body of message and split into words
-        text = message.body
-        words = text.split(' ')
+        words = command.data
 
-        for i in range(2, len(words)):
-            keyword = words[i]
+        for keyword in words:
             redditter_object.remove_global_keyword(keyword)
 
         return "Your requested keywords have been removed"
 
-    def process_subscribe(self, message, redditter_object):
+    def process_subscribe(self, command, redditter_object):
         print "Subscribing " + redditter_object.name
         redditter_object.subscribed = True
 
         return"You have successfully subscribed to the News Bot.  Thank you for the interest.  Send 'unsubscribe' if you no longer wish to receive messages."
 
-    def process_unsubscribe(self, message, redditter_object):
+    def process_unsubscribe(self, command, redditter_object):
         print "Unsubscribing " + redditter_object.name
         redditter_object.subscribed = False
 
         return "You have successfully subscribed to the News Bot.  Thank you for the interest.  Send 'unsubscribe' if you no longer wish to receive messages."
 
-    def process_clear(self, message, redditter_object):
+    def process_clear(self, command, redditter_object):
         print "Clearing all data"
         return ""
 
-    def process_unknown(self, message, redditter_object):
+    def process_unknown(self, command, redditter_object):
         print "Unknown command processed"
 
         reply_message = "I am unable to process your command.  Here is a list of available commands: "
