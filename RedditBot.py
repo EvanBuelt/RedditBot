@@ -11,10 +11,6 @@ class Bot:
         # Get news bot with login info for account
         self.reddit = praw.Reddit(name)
 
-        # Get list of folders for redditors and messages
-        self.redditor_folder = "data/redditors.txt"
-        self.message_folder = "data/message_id.txt"
-
         # xml folder
         self.xml_folder = "data/redditors.xml"
         self.xml_loader = Source.FileManager.XmlLoader(self.xml_folder)
@@ -23,7 +19,6 @@ class Bot:
         # Create list of Redditers using this bot and message ids
         self.redditter_list = []
         self.redditter_object_list = []
-        self.message_id_list = []
         self.message_list = []
 
         # Setup Message manager
@@ -90,7 +85,7 @@ class Bot:
         while not received:
             try:
                 # Get messages and process them
-                messages = self.reddit.inbox.all(limit=25)
+                messages = self.reddit.inbox.unread(limit=25)
                 received = True
             except PExceptions.RequestException:
                 print "Request Exception handled in getting inbox"
@@ -103,17 +98,30 @@ class Bot:
 
     def process_message(self, message_list):
         for message in message_list:
-            if message.id not in self.message_id_list:
-                print "New Message received"
-                # Only look at ids not already found
-                self.message_id_list.append(message.id)
+            print "New Message received"
 
-                # Get sender of message
-                redditer_name = message.author
-                redditter_object = self.get_redditer_object(redditer_name)
+            # Get sender of message
+            redditer_name = message.author
+            redditter_object = self.get_redditer_object(redditer_name)
 
-                # Process messages
-                self.message_manager.process_message(message, redditter_object)
+            # Process messages
+            self.message_manager.process_message(message, redditter_object)
+
+            sent = False
+            wait_times = [1, 2, 4, 8, 16, 32]
+            index = 0
+
+            while not sent:
+                try:
+                    message.mark_read()
+                    sent = True
+                except PExceptions.RequestException:
+                    print "Request Exception handled in getting inbox"
+                    if index >= len(wait_times):
+                        break
+                    sleep_time = wait_times[index]
+                    time.sleep(sleep_time)
+                    index += 1
 
     def get_redditer_object(self, name):
         redditter = None
@@ -130,12 +138,12 @@ class Bot:
         return redditter
 
     def load(self):
+
         # Initialize object list to empty
         self.redditter_object_list = []
 
         # Load list of redditers and message ids
-        self.redditter_list = Source.FileManager.load_id_list(self.redditor_folder)
-        self.message_id_list = Source.FileManager.load_id_list(self.message_folder)
+        self.redditter_list = self.xml_manager.get_redditor_name_list()
 
         for redditor in self.redditter_list:
             redditor_object = Source.Redditor.AccountManager(self.reddit, redditor, self.xml_manager, False)
@@ -143,14 +151,11 @@ class Bot:
             self.redditter_object_list.append(redditor_object)
 
         print "Redditer List: ", self.redditter_list
-        print "Message List: ", self.message_id_list
         print "Redditor Object List: ", self.redditter_object_list
 
         return
 
     def save(self):
-        Source.FileManager.save_id_list(self.redditor_folder, self.redditter_list)
-        Source.FileManager.save_id_list(self.message_folder, self.message_id_list)
         for account in self.redditter_object_list:
             account.save_version_0_1()
         return
