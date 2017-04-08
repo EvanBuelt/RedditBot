@@ -41,9 +41,6 @@ class AccountManager:
 
         # List of ids of subreddits, subreddits, and keywords
         self.post_list = []
-        self.subreddit_list = []
-        self.keyword_list = []
-        self.time_list = []
 
         # Version number of redditor
         self.version = ""
@@ -53,88 +50,49 @@ class AccountManager:
 
     # Functionality to add/remove/get subreddits
     def add_subreddit(self, subreddit_name):
-        found = False
-        for subreddit in self.subreddit_list:
-            if subreddit.name == subreddit_name:
-                found = True
-
-        if not found:
-            self.subreddit_list.append(Subreddit(subreddit_name))
-            return True
-        return False
+        self.xml_manager.add_subreddits(self.name, [subreddit_name])
 
     def remove_subreddit(self, subreddit_name):
-        subreddit_to_remove = None
-        for subreddit in self.subreddit_list:
-            if subreddit.name == subreddit_name:
-                subreddit_to_remove = subreddit
-
-        if subreddit_to_remove is not None:
-            self.subreddit_list.remove(subreddit_to_remove)
-            return True
-        return False
+        self.xml_manager.remove_subreddits(self.name, [subreddit_name])
 
     def get_subreddit_name_list(self):
-        name_list = []
-        for subreddit in self.subreddit_list:
-            name_list.append(subreddit.name)
-        return name_list
+        return self.xml_manager.get_subreddits(self.name)
 
     # Functionality to add/remove/get global keywords
     def add_global_keyword(self, keyword_name):
-        if keyword_name not in self.keyword_list:
-            self.keyword_list.append(keyword_name)
-            return True
-        return False
+        self.xml_manager.add_global_keywords(self.name, [keyword_name])
 
     def remove_global_keyword(self, keyword_name):
-        if keyword_name in self.keyword_list:
-            self.keyword_list.remove(keyword_name)
-            return True
-        return False
+        self.xml_manager.remove_global_keywords(self.name, [keyword_name])
 
     def get_global_keyword_list(self):
-        keyword_list = []
-        for keyword_name in self.keyword_list:
-            keyword_list.append(keyword_name)
-        return keyword_list
+        return self.xml_manager.get_global_keywords(self.name)
 
     # Functionality to add/remove/get keywords in subreddits
     def add_subreddit_keyword(self, keyword_name, subreddit_name):
-        for subreddit in self.subreddit_list:
-            if subreddit.name == subreddit_name:
-                return subreddit.add_keyword(keyword_name)
-        return False
+        self.xml_manager.add_subreddit_keywords(self.name, subreddit_name, [keyword_name])
 
     def remove_subreddit_keyword(self, keyword_name, subreddit_name):
-        for subreddit in self.subreddit_list:
-            if subreddit.name == subreddit_name:
-                return subreddit.remove_keyword(keyword_name)
-        return False
+        self.xml_manager.remove_subreddit_keywords(self.name, subreddit_name, [keyword_name])
 
     def get_subreddit_keyword_list(self, subreddit_name):
-        keyword_list = []
-        for subreddit in self.subreddit_list:
-            if subreddit.name == subreddit_name:
-                for keyword in subreddit.keyword_list:
-                    keyword_list.append(keyword)
-        return keyword_list
+        return self.xml_manager.get_subreddit_keywords(self.name, subreddit_name)
     
     # Get posts from subreddits and send them if keyword is found
     def process_posts(self, reddit, limit_per_subreddit):
         if self.subscribed:
-            for subreddit in self.subreddit_list:
+            for subreddit in self.get_subreddit_name_list():
                 self.send_posts(reddit, subreddit, limit_per_subreddit)
         return
 
-    def send_posts(self, reddit, subreddit_object, limit_per_subreddit):
+    def send_posts(self, reddit, subreddit_name, limit_per_subreddit):
         sent = False
         wait_times = [2, 4, 8, 16]
         index = 0
         while not sent:
             try:
-                subreddit = reddit.subreddit(subreddit_object.name)
-                title = "New posts from " + subreddit_object.name
+                subreddit = reddit.subreddit(subreddit_name)
+                title = "New posts from " + subreddit_name
                 message = ""
                 sent = True
                 link_num = 1
@@ -147,11 +105,11 @@ class AccountManager:
 
                             combined_keywords = []
 
-                            for keyword in self.keyword_list:
+                            for keyword in self.get_global_keyword_list():
                                 if keyword.lower() not in combined_keywords:
                                     combined_keywords.append(keyword.lower())
 
-                            for keyword in subreddit_object.keyword_list:
+                            for keyword in self.get_subreddit_keyword_list(subreddit_name):
                                 if keyword.lower() not in combined_keywords:
                                     combined_keywords.append(keyword.lower())
 
@@ -198,24 +156,14 @@ class AccountManager:
     def load_version_0_1(self):
         self.post_list = FileManager.load_id_list(self.id_folder_name)
 
-        self.subreddit_list = []
-        for subreddit_name in self.xml_manager.get_subreddits(self.name):
-            # Create subreddit object and add all keywords for that subreddit
-            subreddit_object = Subreddit(subreddit_name)
-            subreddit_object.keyword_list = self.xml_manager.get_subreddit_keywords(self.name, subreddit_name)
-
-            # Add subreddit object to list of subreddit objects
-            self.subreddit_list.append(subreddit_object)
-
-        self.keyword_list = self.xml_manager.get_global_keywords(self.name)
         self.subscribed = self.xml_manager.get_subscribed(self.name)
 
         print self.name
-        print self.keyword_list
+        print self.xml_manager.get_global_keywords(self.name)
         print self.subscribed
         print "Subreddits: "
-        for item in self.subreddit_list:
-            print item.name, item.keyword_list
+        for subreddit_name in self.get_subreddit_name_list():
+            print subreddit_name, self.get_subreddit_keyword_list(subreddit_name)
         print ""
 
     # Save list of IDs, subreddits, and keywords appropriately
@@ -226,31 +174,6 @@ class AccountManager:
 
             # Set Version Number of redditor format
             self.xml_manager.set_redditor_xml_version(self.name, 0, 1)
-
-            # Save subreddits and subreddit keywords
-            subreddit_name_list = []
-
-            for subreddit_object in self.subreddit_list:
-                # Append name of subreddit to list
-                subreddit_name_list.append(subreddit_object.name)
-
-            # Save list of subreddits
-            self.xml_manager.clear_subreddits(self.name)
-            self.xml_manager.add_subreddits(self.name, subreddit_name_list)
-
-            # Save list of subreddit keywords
-            for subreddit_object in self.subreddit_list:
-                # Syntactic sugar
-                name = subreddit_object.name
-                keyword_list = subreddit_object.keyword_list
-
-                # Clear subreddit keywords and add current keywords (in case a few were deleted)
-                self.xml_manager.clear_subreddit_keywords(self.name, name)
-                self.xml_manager.add_subreddit_keywords(self.name, name, keyword_list)
-
-            # Save global keywords
-            self.xml_manager.clear_global_keywords(self.name)
-            self.xml_manager.add_global_keywords(self.name, self.keyword_list)
 
             # Save whether user is subscribed
             self.xml_manager.set_subscribed(self.name, self.subscribed)
