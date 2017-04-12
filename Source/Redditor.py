@@ -5,25 +5,6 @@ import FileManager
 __author__ = 'Evan'
 
 
-class Subreddit:
-    def __init__(self, name):
-        self.name = name
-        self.keyword_list = []
-        return
-
-    def add_keyword(self, keyword):
-        if keyword not in self.keyword_list:
-            self.keyword_list.append(keyword)
-            return True
-        return False
-
-    def remove_keyword(self, keyword):
-        if keyword in self.keyword_list:
-            self.keyword_list.remove(keyword)
-            return True
-        return False
-
-
 class AccountManager:
     def __init__(self, reddit, name, xml_manager, subscribed):
         # Set name of redditter associated with class
@@ -77,7 +58,17 @@ class AccountManager:
 
     def get_subreddit_keyword_list(self, subreddit_name):
         return self.xml_manager.get_subreddit_keywords(self.name, subreddit_name)
-    
+
+    # Functionality to add/remove/get times
+    def add_time(self, new_time):
+        self.xml_manager.add_times(self.name, [new_time])
+
+    def remove_time(self, old_time):
+        self.xml_manager.remove_times(self.name, [old_time])
+
+    def get_time_list(self):
+        return self.xml_manager.get_times(self.name)
+
     # Get posts from subreddits and send them if keyword is found
     def process_posts(self, reddit, limit_per_subreddit):
         if self.subscribed:
@@ -160,6 +151,7 @@ class AccountManager:
 
         print self.name
         print self.xml_manager.get_global_keywords(self.name)
+        print self.xml_manager.get_times(self.name)
         print self.subscribed
         print "Subreddits: "
         for subreddit_name in self.get_subreddit_name_list():

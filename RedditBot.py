@@ -36,6 +36,9 @@ class Bot:
         previous_minutes = current_time[minutes_index]
         previous_hours = current_time[hours_index]
 
+        print "Initial minutes: ", previous_minutes
+        print "Initial hours: ", previous_hours
+
         # Start running
         while True:
             # Get current time
@@ -54,10 +57,13 @@ class Bot:
 
             try:
                 if (current_time[hours_index] != previous_hours) and (current_time[hours_index] % 4 == 0):
-                    previous_hours = current_time[hours_index]
+                    print previous_hours, current_time[hours_index]
+
                     # Get posts and send if updated
                     for account in self.redditter_object_list:
                         account.process_posts(self.reddit, 100)
+
+                    previous_hours = current_time[hours_index]
                     print "Posts processed"
 
             except Exception as instance:
