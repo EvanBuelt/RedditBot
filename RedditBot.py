@@ -32,7 +32,7 @@ class Bot:
         minutes_index = 4
 
         # Get last run time
-        current_time = time.gmtime()
+        current_time = time.localtime()
         previous_minutes = current_time[minutes_index]
         previous_hours = current_time[hours_index]
 

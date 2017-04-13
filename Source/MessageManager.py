@@ -62,28 +62,28 @@ class MessageCommand:
 class MessageManager:
     def __init__(self):
         # Commands used for help
-        self.command_menu = [MessageCommand("Help", "You're using this command dumbass.", self.process_help),
-                             MessageCommand("Subscribe", "Subscribes to the bot.", self.process_subscribe),
-                             MessageCommand("Unsubscribe", "Unsubscribes from the bot.  Any data will be kept for future use.", self.process_unsubscribe),
-                             MessageCommand("Clear", "Clears data associated with your account.", self.process_clear),
-                             MessageCommand("Add Subreddit", "Adds a list of subreddits to check.", self.process_add_subreddit),
-                             MessageCommand("Add Subreddits", "Adds a list of subreddits to check.", self.process_add_subreddit),
-                             MessageCommand("Get Subreddit", "Gets a list of subreddits to check.", self.process_get_subreddit),
-                             MessageCommand("Get Subreddits", "Gets a list of subreddits to check.", self.process_get_subreddit),
-                             MessageCommand("Remove Subreddit", "Adds a list of subreddits to check.", self.process_remove_subreddit),
+        self.command_menu = [MessageCommand("Help",              "You're using this command dumbass.",  self.process_help),
+                             MessageCommand("Subscribe",         "Subscribes to the bot.",              self.process_subscribe),
+                             MessageCommand("Unsubscribe",       "Unsubscribes from the bot.  Any data will be kept for future use.", self.process_unsubscribe),
+                             MessageCommand("Clear",             "Clears data associated with your account.", self.process_clear),
+                             MessageCommand("Add Subreddit",     "Adds a list of subreddits to check.", self.process_add_subreddit),
+                             MessageCommand("Add Subreddits",    "Adds a list of subreddits to check.", self.process_add_subreddit),
+                             MessageCommand("Get Subreddit",     "Gets a list of subreddits to check.", self.process_get_subreddit),
+                             MessageCommand("Get Subreddits",    "Gets a list of subreddits to check.", self.process_get_subreddit),
+                             MessageCommand("Remove Subreddit",  "Adds a list of subreddits to check.", self.process_remove_subreddit),
                              MessageCommand("Remove Subreddits", "Adds a list of subreddits to check.", self.process_remove_subreddit),
-                             MessageCommand("Add Keyword", "Adds a list of keywords to check.", self.process_add_keyword),
-                             MessageCommand("Add Keywords", "Adds a list of keywords to check.", self.process_add_keyword),
-                             MessageCommand("Get Keyword", "Gets a list of keywords to check.", self.process_get_keyword),
-                             MessageCommand("Get Keywords", "Gets a list of keywords to check.", self.process_get_keyword),
-                             MessageCommand("Remove Keyword", "Adds a list of keywords to check.", self.process_remove_keyword),
-                             MessageCommand("Remove Keywords", "Adds a list of keywords to check.", self.process_remove_keyword),
-                             MessageCommand("Add Time", "Adds a list of subreddits to check.", self.process_add_time),
-                             MessageCommand("Add Times", "Adds a list of subreddits to check.",self.process_add_time),
-                             MessageCommand("Get Time", "Gets a list of subreddits to check.", self.process_get_time),
-                             MessageCommand("Get Times", "Gets a list of subreddits to check.", self.process_get_time),
-                             MessageCommand("Remove Time", "Adds a list of subreddits to check.", self.process_remove_time),
-                             MessageCommand("Remove Times", "Adds a list of subreddits to check.", self.process_remove_time)]
+                             MessageCommand("Add Keyword",       "Adds a list of keywords to check.",   self.process_add_keyword),
+                             MessageCommand("Add Keywords",      "Adds a list of keywords to check.",   self.process_add_keyword),
+                             MessageCommand("Get Keyword",       "Gets a list of keywords to check.",   self.process_get_keyword),
+                             MessageCommand("Get Keywords",      "Gets a list of keywords to check.",   self.process_get_keyword),
+                             MessageCommand("Remove Keyword",    "Adds a list of keywords to check.",   self.process_remove_keyword),
+                             MessageCommand("Remove Keywords",   "Adds a list of keywords to check.",   self.process_remove_keyword),
+                             MessageCommand("Add Time",          "Adds a list of subreddits to check.", self.process_add_time),
+                             MessageCommand("Add Times",         "Adds a list of subreddits to check.", self.process_add_time),
+                             MessageCommand("Get Time",          "Gets a list of subreddits to check.", self.process_get_time),
+                             MessageCommand("Get Times",         "Gets a list of subreddits to check.", self.process_get_time),
+                             MessageCommand("Remove Time",       "Adds a list of subreddits to check.", self.process_remove_time),
+                             MessageCommand("Remove Times",      "Adds a list of subreddits to check.", self.process_remove_time)]
 
         # Initialize parser data
         Parser.Data.init()
@@ -407,9 +407,3 @@ class MessageManager:
 
         return reply_message
 
-if __name__ == "__main__":
-    manager = MessageManager()
-    data = manager.get_list_of_times(['12:05', 'am', '12:09', '55:55', 'pm'])
-    print data
-    for item in data:
-        print manager.convert_to_24_hour(item)
