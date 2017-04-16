@@ -1,5 +1,4 @@
-import time
-import prawcore.exceptions as PExceptions
+import Source.ExceptionHandler
 import Source.CommandParser as Parser
 __author__ = 'Evan'
 
@@ -127,20 +126,7 @@ class MessageManager:
         except Parser.ParserException:
             reply = self.process_unknown("Exception", redditter_object)
 
-        sent = False
-        wait_times = [1, 2, 4, 8, 16, 32]
-        index = 0
-        while not sent:
-            try:
-                message.reply(reply)
-                sent = True
-            except PExceptions.PrawcoreException:
-                print "Request Exception handled in replying to a message"
-                if index >= len(wait_times):
-                    break
-                sleep_time = wait_times[index]
-                time.sleep(sleep_time)
-                index += 1
+        Source.ExceptionHandler.praw_caller(message.reply, "Exception handled in replying to a message", reply)
 
     def process_help(self, command, redditter_object):
         reply_message = ""
