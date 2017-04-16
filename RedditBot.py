@@ -90,10 +90,15 @@ class Bot:
 
         while not received:
             try:
-                # Get messages and process them
-                messages = self.reddit.inbox.unread(limit=25)
+                # Get unread messages and process them
+                unread_messages = self.reddit.inbox.unread(limit=25)
+                inbox_messages = self.reddit.inbox.messages(limit=50)
+
+                for message in unread_messages:
+                    if message in inbox_messages:
+                        messages.append(message)
                 received = True
-            except PExceptions.RequestException:
+            except PExceptions.PrawcoreException:
                 print "Request Exception handled in getting inbox"
                 if index >= len(wait_times):
                     break
@@ -121,7 +126,7 @@ class Bot:
                 try:
                     message.mark_read()
                     sent = True
-                except PExceptions.RequestException:
+                except PExceptions.PrawcoreException:
                     print "Request Exception handled in getting inbox"
                     if index >= len(wait_times):
                         break

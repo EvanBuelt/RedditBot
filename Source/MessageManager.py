@@ -108,21 +108,24 @@ class MessageManager:
     def process_message(self, message, redditter_object):
 
         # Get command from body of message
-        tokens = self.lexer.get_tokens(message.body)
-        command = self.parser.token_to_command(tokens)
+        try:
+            tokens = self.lexer.get_tokens(message.body)
+            command = self.parser.token_to_command(tokens)
 
-        # Get command and initialize reply
-        commandName = command.command.lower()
-        reply = None
+            # Get command and initialize reply
+            commandName = command.command.lower()
+            reply = None
 
-        # There are a few one word instructions, so process these
-        for menu in self.command_menu:
-            if commandName == menu.command.lower():
-                reply = menu.callback(command, redditter_object)
-                break
+            # There are a few one word instructions, so process these
+            for menu in self.command_menu:
+                if commandName == menu.command.lower():
+                    reply = menu.callback(command, redditter_object)
+                    break
 
-        if reply is None:
-            reply = self.process_unknown(command, redditter_object)
+            if reply is None:
+                reply = self.process_unknown(command, redditter_object)
+        except Parser.ParserException:
+            reply = self.process_unknown("Exception", redditter_object)
 
         sent = False
         wait_times = [1, 2, 4, 8, 16, 32]
@@ -131,7 +134,7 @@ class MessageManager:
             try:
                 message.reply(reply)
                 sent = True
-            except PExceptions.RequestException:
+            except PExceptions.PrawcoreException:
                 print "Request Exception handled in replying to a message"
                 if index >= len(wait_times):
                     break

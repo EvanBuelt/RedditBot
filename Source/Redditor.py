@@ -117,7 +117,7 @@ class AccountManager:
                     self.message(title, message)
                     print "Sent message to " + self.name
 
-            except PExceptions.RequestException:
+            except PExceptions.PrawcoreException:
                 print "Request Exception handled in getting subreddit"
                 if index >= len(wait_times):
                     break
