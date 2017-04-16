@@ -1,5 +1,4 @@
-import time
-import prawcore.exceptions as PExceptions
+import Source.ExceptionHandler
 import FileManager
 
 __author__ = 'Evan'
@@ -73,75 +72,48 @@ class AccountManager:
     def process_posts(self, reddit, limit_per_subreddit):
         if self.subscribed:
             for subreddit in self.get_subreddit_name_list():
-                self.send_posts(reddit, subreddit, limit_per_subreddit)
+                Source.ExceptionHandler.praw_caller(self.send_posts, "Exception handled in getting subreddits", reddit, subreddit, limit_per_subreddit)
         return
 
     def send_posts(self, reddit, subreddit_name, limit_per_subreddit):
-        sent = False
-        wait_times = [2, 4, 8, 16]
-        index = 0
-        while not sent:
-            try:
-                subreddit = reddit.subreddit(subreddit_name)
-                title = "New posts from " + subreddit_name
-                message = ""
-                sent = True
-                link_num = 1
 
-                for submission in subreddit.new(limit=limit_per_subreddit):
-                    if link_num <= 15:
-                        # Only look at ids not already found
-                        if submission.id not in self.post_list:
-                            self.post_list.append(submission.id)
+        subreddit = reddit.subreddit(subreddit_name)
+        title = "New posts from " + subreddit_name
+        message = ""
+        link_num = 1
 
-                            combined_keywords = []
+        for submission in subreddit.new(limit=limit_per_subreddit):
+            if link_num <= 15:
+                # Only look at ids not already found
+                if submission.id not in self.post_list:
+                    self.post_list.append(submission.id)
 
-                            for keyword in self.get_global_keyword_list():
-                                if keyword.lower() not in combined_keywords:
-                                    combined_keywords.append(keyword.lower())
+                    combined_keywords = []
 
-                            for keyword in self.get_subreddit_keyword_list(subreddit_name):
-                                if keyword.lower() not in combined_keywords:
-                                    combined_keywords.append(keyword.lower())
+                    for keyword in self.get_global_keyword_list():
+                        if keyword.lower() not in combined_keywords:
+                            combined_keywords.append(keyword.lower())
 
-                            # Iterate over all keywords to see if they are found in the title
-                            for keyword in combined_keywords:
-                                if keyword.lower() in submission.title.lower():
-                                    message = message + str(link_num) + ". [" + submission.title + "](" + \
-                                              submission.permalink + ")  \n\n"
-                                    link_num += 1
-                                    break
+                    for keyword in self.get_subreddit_keyword_list(subreddit_name):
+                        if keyword.lower() not in combined_keywords:
+                            combined_keywords.append(keyword.lower())
 
-                # If there was something found, send a message to the redditor
-                if message is not "":
-                    self.message(title, message)
-                    print "Sent message to " + self.name
+                    # Iterate over all keywords to see if they are found in the title
+                    for keyword in combined_keywords:
+                        if keyword.lower() in submission.title.lower():
+                            message = message + str(link_num) + ". [" + submission.title + "](" + \
+                                      submission.permalink + ")  \n\n"
+                            link_num += 1
+                            break
 
-            except PExceptions.PrawcoreException:
-                print "Request Exception handled in getting subreddit"
-                if index >= len(wait_times):
-                    break
-                sleep_time = wait_times[index]
-                time.sleep(sleep_time)
-                index += 1
-        return
+        # If there was something found, send a message to the redditor
+        if message is not "":
+            self.message(title, message)
+            print "Sent message to " + self.name
 
     # Abstraction to send a message
     def message(self, title, message):
-        sent = False
-        wait_times = [1, 2, 4, 8, 16, 32]
-        index = 0
-        while not sent:
-            try:
-                self.redditor.message(title, message)
-                sent = True
-            except PExceptions.RequestException:
-                print "Request Exception handled in sending a message"
-                if index >= len(wait_times):
-                    break
-                sleep_time = wait_times[index]
-                time.sleep(sleep_time)
-                index += 1
+        Source.ExceptionHandler.praw_caller(self.redditor.message, "Exception handled in sending a message", title, message)
 
     # Load list of IDs, subreddits, and keywords appropriately
     def load_version_0_1(self):

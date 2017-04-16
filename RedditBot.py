@@ -3,7 +3,7 @@ import praw
 import Source.Redditor
 import Source.FileManager
 import Source.MessageManager
-import prawcore.exceptions as PExceptions
+import Source.ExceptionHandler
 
 
 class Bot:
@@ -74,7 +74,7 @@ class Bot:
     def handle_inbox(self):
 
         # Get list of messages from inbox
-        messages = self.get_inbox_messages()
+        messages = Source.ExceptionHandler.praw_caller(self.get_inbox_messages, "Exception in getting inbox")
 
         # Process messages
         self.process_message(messages)
@@ -84,27 +84,16 @@ class Bot:
 
     def get_inbox_messages(self):
         messages = []
-        received = False
-        wait_times = [1, 2, 4, 8, 16, 32]
-        index = 0
 
-        while not received:
-            try:
-                # Get unread messages and process them
-                unread_messages = self.reddit.inbox.unread(limit=25)
-                inbox_messages = self.reddit.inbox.messages(limit=50)
+        # Get unread messages and process them
+        unread_messages = self.reddit.inbox.unread(limit=25)
+        inbox_messages = self.reddit.inbox.messages(limit=50)
 
-                for message in unread_messages:
-                    if message in inbox_messages:
-                        messages.append(message)
-                received = True
-            except PExceptions.PrawcoreException:
-                print "Request Exception handled in getting inbox"
-                if index >= len(wait_times):
-                    break
-                sleep_time = wait_times[index]
-                time.sleep(sleep_time)
-                index += 1
+        # Get any unread message in 'messages' inbox only
+        for message in unread_messages:
+            if message in inbox_messages:
+                messages.append(message)
+
         return messages
 
     def process_message(self, message_list):
@@ -118,21 +107,8 @@ class Bot:
             # Process messages
             self.message_manager.process_message(message, redditter_object)
 
-            sent = False
-            wait_times = [1, 2, 4, 8, 16, 32]
-            index = 0
-
-            while not sent:
-                try:
-                    message.mark_read()
-                    sent = True
-                except PExceptions.PrawcoreException:
-                    print "Request Exception handled in getting inbox"
-                    if index >= len(wait_times):
-                        break
-                    sleep_time = wait_times[index]
-                    time.sleep(sleep_time)
-                    index += 1
+            # Mark message read
+            Source.ExceptionHandler.praw_caller(message.mark_read, "Exception handled in marking message read")
 
     def get_redditer_object(self, name):
         redditter = None
