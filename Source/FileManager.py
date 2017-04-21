@@ -132,7 +132,7 @@ class XmlManager:
             # TODO: create and use variables for tag and attribute names
             keyword_element = ET.Element('keyword', {self.name_string: keyword})
             keyword_object.append(keyword_element)
-        return
+        return new_keywords
 
     def remove_global_keywords(self, redditor_name, keywords):
         # Get keyword object that contains a list of global keywords
@@ -149,7 +149,7 @@ class XmlManager:
         # Remove all found keywords from xml data
         for keyword_element in keyword_elements_removal:
             keyword_object.remove(keyword_element)
-        return
+        return keyword_elements_removal
 
     def clear_global_keywords(self, redditor_name):
         global_keywords = self.get_global_keywords(redditor_name)
@@ -188,6 +188,9 @@ class XmlManager:
         # Setup keyword object.
         subreddit_keyword_object = None
 
+        # Setup new keywords
+        new_keywords = []
+
         # Find subreddit specified
         for child in subreddits_object:
             if child.attrib[self.name_string] == subreddit:
@@ -196,7 +199,6 @@ class XmlManager:
         if subreddit_keyword_object is not None:
             # Get all keywords for particular subreddit
             current_keywords = self.get_subreddit_keywords(redditor_name, subreddit)
-            new_keywords = []
 
             # Get list of new keywords to be added
             for keyword in keywords:
@@ -208,7 +210,7 @@ class XmlManager:
                 # TODO: create and use variables for tag and attribute names
                 keyword_element = ET.Element('keyword', {self.name_string: keyword})
                 subreddit_keyword_object.append(keyword_element)
-        return
+        return new_keywords
 
     def remove_subreddit_keywords(self, redditor_name, subreddit, keywords):
         # Get subreddit object that contains a list of subreddits
@@ -218,14 +220,15 @@ class XmlManager:
         # Setup keyword object.
         subreddit_keyword_object = None
 
+        # Setup keywords removed
+        keyword_elements_removal = []
+
         # Find subreddit specified
         for child in subreddits_object:
             if child.attrib[self.name_string] == subreddit:
                 subreddit_keyword_object = child
 
         if subreddit_keyword_object is not None:
-            keyword_elements_removal = []
-
             # Find all keywords in list provided in xml data object
             for keyword_element in subreddit_keyword_object:
                 if keyword_element.attrib[self.name_string] in keywords:
@@ -234,7 +237,7 @@ class XmlManager:
             # Remove all found keywords from xml data
             for keyword_element in keyword_elements_removal:
                 subreddit_keyword_object.remove(keyword_element)
-        return
+        return keyword_elements_removal
 
     def clear_subreddit_keywords(self, redditor_name, subreddit):
         subreddit_keywords = self.get_subreddit_keywords(redditor_name, subreddit)
@@ -277,7 +280,7 @@ class XmlManager:
             # TODO: create and use variables for tag and attribute names
             subreddit_element = ET.Element('subreddit', {self.name_string: subreddit})
             subreddit_object.append(subreddit_element)
-        return
+        return new_subreddits
 
     def remove_subreddits(self, redditor_name, subreddits):
         # Get subreddit object that contains a list of subreddits
@@ -294,7 +297,7 @@ class XmlManager:
         # Remove all found keywords from xml data
         for subreddit_element in subreddit_elements_removal:
             subreddit_object.remove(subreddit_element)
-        return
+        return subreddit_elements_removal
 
     def clear_subreddits(self, redditor_name):
         subreddits = self.get_subreddits(redditor_name)
@@ -336,7 +339,7 @@ class XmlManager:
             # TODO: create and use variables for tag and attribute names
             time_element = ET.Element('time', {self.name_string: time})
             time_object.append(time_element)
-        return
+        return new_times
 
     def remove_times(self, redditor_name, times):
         # Get time object that contains a list of times
@@ -353,7 +356,7 @@ class XmlManager:
         # Remove all found times from xml data
         for time_element in subreddit_elements_removal:
             time_object.remove(time_element)
-        return
+        return subreddit_elements_removal
 
     def clear_times(self, redditor_name):
         times = self.get_times(redditor_name)

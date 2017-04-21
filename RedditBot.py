@@ -22,7 +22,7 @@ class Bot:
         self.message_list = []
 
         # Setup Message manager
-        self.message_manager = Source.MessageManager.MessageManager()
+        self.message_manager = Source.MessageManager.MessageManager(self.reddit)
 
         self.load()
 

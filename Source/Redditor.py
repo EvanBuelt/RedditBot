@@ -30,40 +30,40 @@ class AccountManager:
 
     # Functionality to add/remove/get subreddits
     def add_subreddit(self, subreddit_name):
-        self.xml_manager.add_subreddits(self.name, [subreddit_name])
+        return self.xml_manager.add_subreddits(self.name, [subreddit_name])
 
     def remove_subreddit(self, subreddit_name):
-        self.xml_manager.remove_subreddits(self.name, [subreddit_name])
+        return self.xml_manager.remove_subreddits(self.name, [subreddit_name])
 
     def get_subreddit_name_list(self):
         return self.xml_manager.get_subreddits(self.name)
 
     # Functionality to add/remove/get global keywords
     def add_global_keyword(self, keyword_name):
-        self.xml_manager.add_global_keywords(self.name, [keyword_name])
+        return self.xml_manager.add_global_keywords(self.name, [keyword_name])
 
     def remove_global_keyword(self, keyword_name):
-        self.xml_manager.remove_global_keywords(self.name, [keyword_name])
+        return self.xml_manager.remove_global_keywords(self.name, [keyword_name])
 
     def get_global_keyword_list(self):
         return self.xml_manager.get_global_keywords(self.name)
 
     # Functionality to add/remove/get keywords in subreddits
     def add_subreddit_keyword(self, keyword_name, subreddit_name):
-        self.xml_manager.add_subreddit_keywords(self.name, subreddit_name, [keyword_name])
+        return self.xml_manager.add_subreddit_keywords(self.name, subreddit_name, [keyword_name])
 
     def remove_subreddit_keyword(self, keyword_name, subreddit_name):
-        self.xml_manager.remove_subreddit_keywords(self.name, subreddit_name, [keyword_name])
+        return self.xml_manager.remove_subreddit_keywords(self.name, subreddit_name, [keyword_name])
 
     def get_subreddit_keyword_list(self, subreddit_name):
         return self.xml_manager.get_subreddit_keywords(self.name, subreddit_name)
 
     # Functionality to add/remove/get times
     def add_time(self, new_time):
-        self.xml_manager.add_times(self.name, [new_time])
+        return self.xml_manager.add_times(self.name, [new_time])
 
     def remove_time(self, old_time):
-        self.xml_manager.remove_times(self.name, [old_time])
+        return self.xml_manager.remove_times(self.name, [old_time])
 
     def get_time_list(self):
         return self.xml_manager.get_times(self.name)

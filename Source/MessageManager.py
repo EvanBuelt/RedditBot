@@ -1,5 +1,6 @@
 import Source.ExceptionHandler
 import Source.CommandParser as Parser
+import prawcore.exceptions as praw_exceptions
 __author__ = 'Evan'
 
 
@@ -59,7 +60,7 @@ class MessageCommand:
 
 
 class MessageManager:
-    def __init__(self):
+    def __init__(self, reddit):
         # Commands used for help
         self.command_menu = [MessageCommand("Help",              "You're using this command dumbass.",  self.process_help),
                              MessageCommand("Subscribe",         "Subscribes to the bot.",              self.process_subscribe),
@@ -84,6 +85,7 @@ class MessageManager:
                              MessageCommand("Remove Time",       "Adds a list of subreddits to check.", self.process_remove_time),
                              MessageCommand("Remove Times",      "Adds a list of subreddits to check.", self.process_remove_time)]
 
+        self.reddit = reddit
         # Initialize parser data
         Parser.Data.init()
 
@@ -170,21 +172,50 @@ class MessageManager:
         # Get body of message and split into words
         words = command.data
 
-        for word in words:
-            subreddit = word
-            redditter_object.add_subreddit(subreddit)
+        # List of added subreddits
+        added_subreddits = []
 
-        return "Your requested subreddits have been added"
+        for word in words:
+            subreddit_name = word
+
+            try:
+                subreddit = self.reddit.subreddit(subreddit_name)
+                posts = subreddit.new(limit=1)
+                for item in posts:
+                    item = item
+            except praw_exceptions.Redirect:
+                continue
+
+            added_subreddits = added_subreddits + redditter_object.add_subreddit(subreddit_name)
+
+        # Handle message back to redditter
+        if len(added_subreddits) == 0:
+            message = "No subreddits have been added."
+        else:
+            message = "The following subreddits have been added: "
+            for i in range(0, len(added_subreddits)):
+                message = message + "\n\n" + str(i + 1) + ") " + added_subreddits[i]
+        return message
 
     def process_remove_subreddit(self, command, redditter_object):
         print "Removing subreddit"
         # Get body of message and split into words
         words = command.data
 
-        for subreddit in words:
-            redditter_object.remove_subreddit(subreddit)
+        # List of removed subreddits
+        removed_subreddits = []
 
-        return "Your requested subreddits have been removed"
+        for subreddit in words:
+            removed_subreddits = removed_subreddits + redditter_object.remove_subreddit(subreddit)
+
+        # Handle message back to redditter
+        if len(removed_subreddits) == 0:
+            message = "No subreddits have been removed."
+        else:
+            message = "The following subreddits have been removed: "
+            for i in range(0, len(removed_subreddits)):
+                message = message + "\n\n" + str(i + 1) + ") " + removed_subreddits[i]
+        return message
 
     # Keyword related functionality
     def process_get_keyword(self, command, redditter_object):
@@ -208,20 +239,38 @@ class MessageManager:
         # Get body of message and split into words
         words = command.data
 
-        for keyword in words:
-            redditter_object.add_global_keyword(keyword)
+        # List of added keywords
+        added_keywords = []
 
-        return "Your requested keywords have been added"
+        for keyword in words:
+            added_keywords = added_keywords + redditter_object.add_global_keyword(keyword)
+
+        if len(added_keywords) == 0:
+            message = "No keywords have been added."
+        else:
+            message = "The following keywords have been added: "
+            for i in range(0, len(added_keywords)):
+                message = message + "\n\n" + str(i + 1) + ") " + added_keywords[i]
+        return message
 
     def process_remove_keyword(self, command, redditter_object):
         print "Removing keyword"
         # Get body of message and split into words
         words = command.data
 
-        for keyword in words:
-            redditter_object.remove_global_keyword(keyword)
+        # List of removed keywords
+        removed_keywords = []
 
-        return "Your requested keywords have been removed"
+        for keyword in words:
+            removed_keywords = removed_keywords + redditter_object.remove_global_keyword(keyword)
+
+        if len(removed_keywords) == 0:
+            message = "No keywords have been removed."
+        else:
+            message = "The following keywords have been removed: "
+            for i in range(0, len(removed_keywords)):
+                message = message + "\n\n" + str(i + 1) + ") " + removed_keywords[i]
+        return message
 
     # Time related functionality
     def process_add_time(self, command, redditter_object):
@@ -230,27 +279,45 @@ class MessageManager:
         list_of_times = self.get_list_of_times(command.data)
         list_of_converted_times = [self.convert_to_24_hour(unconverted_time) for unconverted_time in list_of_times]
 
+        # Added times
+        added_times = []
+
         for converted_time in list_of_converted_times:
-            redditter_object.add_time(converted_time)
+            added_times = added_times + redditter_object.add_time(converted_time)
 
         if len(list_of_converted_times) == 0:
             return "Invalid time format.  Please use hh:mm am/pm (12 hour format) or hh:mm (24 hour format)"
         else:
-            return "Your requested time has been added"
+            if len(added_times) == 0:
+                message = "No times have been added."
+            else:
+                message = "The following times have been added: "
+                for i in range(0, len(added_times)):
+                    message = message + "\n\n" + str(i + 1) + ") " + added_times[i]
+            return message
 
     def process_remove_time(self, command, redditter_object):
         print "Removing time"
+
+        # Removed times
+        removed_times = []
 
         list_of_times = self.get_list_of_times(command.data)
         list_of_converted_times = [self.convert_to_24_hour(unconverted_time) for unconverted_time in list_of_times]
 
         for converted_time in list_of_converted_times:
-            redditter_object.remove_time(converted_time)
+            removed_times = removed_times + redditter_object.remove_time(converted_time)
 
         if len(list_of_converted_times) == 0:
             return "Invalid time format.  Please use hh:mm am/pm (12 hour format) or hh:mm (24 hour format)"
         else:
-            return "Your requested time has been removed"
+            if len(removed_times) == 0:
+                message = "No times have been removed."
+            else:
+                message = "The following times have been removed: "
+                for i in range(0, len(removed_times)):
+                    message = message + "\n\n" + str(i + 1) + ") " + removed_times[i]
+            return message
 
     def process_get_time(self, command, redditter_object):
         print "Getting time"
