@@ -1,9 +1,27 @@
+Features:
 -Subreddit Specific keywords
 -Multiple commands per message
 -Refactor subreddit title parsing to match entire words
 -Add options for how/what to parse
 -Upvote percentage and upvote minimum
 -Max number of subreddits
+-Send messages at desired times
+
+Code Improvements:
+-Look into using a database rather than XML
+-Instantiate XML Manager in FileManager module for global use
+    -Update MessageManager to use XML Manager directly instead of redditor object.
+        -Remove add/remove functions from Account Manager class
+-Improve handling of inbox to go to next message if praw exception thrown
+-Add more comments
+-Use Docstring for functions
+-There are no tests.  Add them
+-Create function that formats a python list into a string with each item in the list on a new line
+-
 
 Bugs:
 -ID files sometimes have null characters in them
+-If the user requests or adds subreddits, the bot throws exceptions and stops processing inbox
+
+Misc:
+-Update Readme
