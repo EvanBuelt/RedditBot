@@ -22,4 +22,4 @@ def praw_caller(function_call, debug_message, *args):
             time.sleep(sleep_time)
             print "Waited: ", sleep_time
             index += 1
-        return return_object
+    return return_object
