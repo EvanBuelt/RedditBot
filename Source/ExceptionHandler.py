@@ -3,8 +3,8 @@ import prawcore.exceptions as praw_exceptions
 __author__ = 'Evan'
 
 
-def praw_caller(function_call, debug_message, *args):
-    return_object = None
+def praw_caller(function_call, default_return, debug_message, *args):
+    return_object = default_return
     processed = False
     wait_times = [1, 2, 4, 8, 16, 32]
     index = 0

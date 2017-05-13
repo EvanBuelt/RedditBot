@@ -128,7 +128,7 @@ class MessageManager:
         except Parser.ParserException:
             reply = self.process_unknown("Exception", redditter_object)
 
-        Source.ExceptionHandler.praw_caller(message.reply, "Exception handled in replying to a message", reply)
+        Source.ExceptionHandler.praw_caller(message.reply, list(), "Exception handled in replying to a message", reply)
 
     def process_help(self, command, redditter_object):
         reply_message = ""
@@ -462,4 +462,3 @@ class MessageManager:
             reply_message = reply_message + "\n\n-" + item.command
 
         return reply_message
-

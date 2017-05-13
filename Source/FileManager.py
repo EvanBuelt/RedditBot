@@ -346,17 +346,17 @@ class XmlManager:
         redditor_object = self.get_redditor_child(redditor_name)
         time_object = self.get_tag(redditor_object, self.times_string)
 
-        subreddit_elements_removal = []
+        time_elements_removal = []
 
         # Find all times in list provided in xml data object
         for time_element in time_object:
             if time_element.attrib[self.name_string] in times:
-                subreddit_elements_removal.append(time_element)
+                time_elements_removal.append(time_element)
 
         # Remove all found times from xml data
-        for time_element in subreddit_elements_removal:
+        for time_element in time_elements_removal:
             time_object.remove(time_element)
-        return subreddit_elements_removal
+        return time_elements_removal
 
     def clear_times(self, redditor_name):
         times = self.get_times(redditor_name)

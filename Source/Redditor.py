@@ -72,7 +72,7 @@ class AccountManager:
     def process_posts(self, reddit, limit_per_subreddit):
         if self.subscribed:
             for subreddit in self.get_subreddit_name_list():
-                Source.ExceptionHandler.praw_caller(self.send_posts, "Exception handled in getting subreddits", reddit, subreddit, limit_per_subreddit)
+                Source.ExceptionHandler.praw_caller(self.send_posts, list(), "Exception handled in getting subreddits", reddit, subreddit, limit_per_subreddit)
         return
 
     def send_posts(self, reddit, subreddit_name, limit_per_subreddit):
@@ -113,7 +113,7 @@ class AccountManager:
 
     # Abstraction to send a message
     def message(self, title, message):
-        Source.ExceptionHandler.praw_caller(self.redditor.message, "Exception handled in sending a message", title, message)
+        Source.ExceptionHandler.praw_caller(self.redditor.message, list(), "Exception handled in sending a message", title, message)
 
     # Load list of IDs, subreddits, and keywords appropriately
     def load_version_0_1(self):

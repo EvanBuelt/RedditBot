@@ -74,7 +74,7 @@ class Bot:
     def handle_inbox(self):
 
         # Get list of messages from inbox
-        messages = Source.ExceptionHandler.praw_caller(self.get_inbox_messages, "Exception in getting inbox")
+        messages = Source.ExceptionHandler.praw_caller(self.get_inbox_messages, list(), "Exception in getting inbox")
 
         # Process messages
         self.process_message(messages)
@@ -108,7 +108,7 @@ class Bot:
             self.message_manager.process_message(message, redditter_object)
 
             # Mark message read
-            Source.ExceptionHandler.praw_caller(message.mark_read, "Exception handled in marking message read")
+            Source.ExceptionHandler.praw_caller(message.mark_read, list(), "Exception handled in marking message read")
 
     def get_redditer_object(self, name):
         redditter = None
